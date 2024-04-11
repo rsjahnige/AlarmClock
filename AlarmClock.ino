@@ -16,12 +16,12 @@ void setup() {
   lcd.init(LCD_2LINEMODE, LCD_5x8FONT);
 
   clk = new Calendar(&lcd);
+
   while(lcd.isBusy());
-  lcd.displayPower(LCD_DISPLAYON, LCD_CURSORON, LCD_BLINKON);
+  lcd.displayPower(LCD_DISPLAYON, LCD_CURSOROFF, LCD_BLINKOFF);
 }
 
 void loop() {
-  buzzer.playMelody();
-  //clk -> displayTime();
-  delay(10000);
+  clk -> display();
+  delay(1000);
 }
