@@ -1,155 +1,340 @@
 #include "Calendar.h"
 
-Calendar::Calendar(const LiquidCrystal *lcd)
+Calendar::Calendar(const LiquidCrystal *lcd) : Context(lcd, CNTX_DISPLAY)
 {
-  _lcd = lcd;
-
   _year = 2024;
-  _month = 4;
-  _day = 11;
-  _hour = 3;
-  _minute = 59;
+  _month = 0;
+  _day = 1;
+  _hour = 0;
+  _minute = 0;
   _second = 0;
+  _offset = 0;
 }
 
-void Calendar::display(void) 
+void Calendar::display(void)
 {
-  update();
-  if ((millis() / 1000) < 10) printDate();
-  printTime();
+  Context::print("XXX XX XXXX\0", LCD_LINE1);
+  Context::print("XX:XX:XX\0", LCD_LINE2);
+
+  printMonth();
+  printDay();
+  printYear();
+  printTimeSegment(HOUR);
+  printTimeSegment(MINUTE);
+  printTimeSegment(SECOND);
 }
 
-void Calendar::update(void)
+void Calendar::refresh(void) 
+{
+  if (Context::getMode() == CNTX_DISPLAY) {
+    switch (updateDateTime()) {
+      case YEAR:
+        printYear();
+      case MONTH:
+        printMonth();
+      case DAY:
+        printDay();
+      case HOUR:
+        printTimeSegment(HOUR);
+      case MINUTE:
+        printTimeSegment(MINUTE);
+      default:
+        printTimeSegment(SECOND);
+    }
+  }
+}
+
+// Returns highest Date/Time segment that needs to be updated
+uint8_t Calendar::updateDateTime(void)
 {
   long seconds;
+  uint8_t result = SECOND;
 
-  // Assumes display() is called at least every minute
+  // Assumes refresh() is called at least every minute
+  // TODO - I need to revisit this logic and consider what happens 
+  //        when the user sets the time
   seconds = (millis() / 1000) % 60;
+  if (_offset == 60) _offset -= seconds;       // Set to 60 by buttonHold()
+
+  seconds = (seconds + _offset) % 60;
   if (seconds < _second) {
+    result = MINUTE;
     if ((_minute += 1) == 60) {
       _minute = 0; 
+      result = HOUR;
       if ((_hour += 1) == 24) {
         _hour = 0;
       }
     }
   }
   _second = seconds;
+
+  // !!! TODO - make sure this logic works !!! 
+  // !!! greater than has been used for days to mitigate adverse affects of possible user error !!!
+  if ((result == HOUR) && (_hour == 0)) {
+    if (((_month % 2) == 1) && (_day >= 31)) {              // January, March, May, July, September, November
+      _day = 1; 
+      _month += 1;
+      result = MONTH;
+    } else if (((_month % 2) == 0) && (_day >= 30)) {       // April, June, August, October, December
+      _day = 1;
+      _month += 1;
+      result = MONTH;
+    } else if ((_month == 2) && (_day >= 28)) {              // Feburary
+      if ((_year % 4) != 0) {                               // Not a leap year
+        _day = 1;
+        _month += 1;
+      } else if (((_year % 4) == 0) && (_day >= 29)) {      // Leap year
+        _day = 1;
+        _month += 1;
+      }
+      result = MONTH;
+    } else {
+      _day += 1;
+      result = DAY;
+    } 
+  }
+
+  if (_month == 12) {
+    _month = 0;
+    _year += 1;
+    result = YEAR;
+  }
+
+  return result;
 }
 
-void Calendar::printTime(void)
+void Calendar::shiftRight(void) 
 {
-  uint8_t high, low;                  // High and low base 10 integer digits
-
-  high = _hour / 10;
-  low = _hour % 10;
-  _time_str[0] = (char)(high | 0x30);
-  _time_str[1] = (char)(low | 0x30);
-
-  high = _minute / 10;
-  low = _minute % 10;
-  _time_str[3] = (char)(high | 0x30);
-  _time_str[4] = (char)(low | 0x30);
-
-  high = _second / 10;
-  low = _second % 10;
-  _time_str[6] = (char)(high | 0x30);
-  _time_str[7] = (char)(low | 0x30);
-
-  while(_lcd -> isBusy());
-  _lcd -> setDDRAMAddr(0x40);         // Set DDRAM Address to second line
-  while(_lcd -> isBusy());
-  _lcd -> print(_time_str);
+  if (Context::getMode() == CNTX_EDIT) {
+    switch (Context::getCursor()) {
+      case MONTH:
+        Context::setCursor(DAY);
+        break;
+      case DAY:
+        Context::setCursor(YEAR);
+        break;
+      case YEAR:
+        Context::setCursor(HOUR);
+        break;
+      case HOUR:
+        Context::setCursor(MINUTE);
+        break;
+      case MINUTE:
+        Context::setCursor(SECOND);
+        break;
+      case SECOND:
+        Context::setCursor(MONTH);        // Loop back around to the beginning
+        break;
+      default:
+        Serial.println("Calendar::shiftRight() : ERROR");
+    }
+  }
 }
 
-void Calendar::printDate(void) 
+void Calendar::shiftLeft(void) 
 {
-  uint8_t high, low;
+  if (Context::getMode() == CNTX_EDIT) {
+    switch (Context::getCursor()) {
+      case MONTH:                     // Loop around to the end
+        Context::setCursor(SECOND);    
+        break;
+      case DAY:
+        Context::setCursor(MONTH);
+        break;
+      case YEAR:
+        Context::setCursor(DAY);
+        break;
+      case HOUR:
+        Context::setCursor(YEAR);
+        break;
+      case MINUTE:
+        Context::setCursor(HOUR);
+        break;
+      case SECOND:
+        Context::setCursor(MINUTE);        
+        break;
+      default:
+        Serial.println("Calendar::shiftLeft() : ERROR");
+    }
+  }
+}
 
+void Calendar::shiftUp(void) 
+{
+  if (Context::getMode() == CNTX_EDIT) {
+    switch(Context::getCursor()) {
+      case MONTH:
+        _month = (_month + 1) % 12;
+        printMonth();
+        Context::setCursor(MONTH);
+        break;
+      case DAY:
+        _day = (_day == 31) ? 1 : (_day + 1);         // TODO - addd modulo depending on Month ??
+        printDay();
+        Context::setCursor(DAY);
+        break;
+      case YEAR:
+        _year += 1;
+        printYear();
+        Context::setCursor(YEAR);
+        break;
+      case HOUR:
+        _hour = (_hour + 1) % 24;
+        printTimeSegment(HOUR);
+        Context::setCursor(HOUR);
+        break;
+      case MINUTE:
+        _minute = (_minute + 1) % 60;
+        printTimeSegment(MINUTE);
+        Context::setCursor(MINUTE);
+        break;
+    }
+  }
+}
+
+void Calendar::shiftDown(void)
+{
+    if (Context::getMode() == CNTX_EDIT) {
+    switch(Context::getCursor()) {
+      case MONTH:
+        _month = ((_month + 12) - 1) % 12;      // Workaround - Arduino doesn't like negative modulo arithmatic
+        printMonth();
+        Context::setCursor(MONTH);
+        break;
+      case DAY:
+        _day = (_day == 1) ? 31 : (_day - 1);         // TODO - addd modulo depending on Month ??
+        printDay();
+        Context::setCursor(DAY);
+        break;
+      case YEAR:
+        _year -= 1;
+        printYear();
+        Context::setCursor(YEAR);
+        break;
+      case HOUR:
+        _hour = ((_hour + 24) - 1) % 24;
+        printTimeSegment(HOUR);
+        Context::setCursor(HOUR);
+        break;
+      case MINUTE:
+        _minute = ((_minute + 60) - 1) % 60;
+        printTimeSegment(MINUTE);
+        Context::setCursor(MINUTE);
+        break;
+    }
+  }
+}
+
+void Calendar::buttonHold(void) 
+{
+  if (Context::getMode() == CNTX_DISPLAY) {
+    _second = 0;
+    printTimeSegment(SECOND);
+  } else {
+    _offset = 60;         // Signals to updateDateTime() that an offset should be applied
+  }
+
+  Context::buttonHold();
+}
+
+void Calendar::printMonth(void) 
+{
   switch (_month) {
-    case 1:
-      _date_str[0] = 'J';
-      _date_str[1] = 'a';
-      _date_str[2] = 'n';
+    case JANUARY:
+      Context::print("Jan\0", MONTH);
       break;
-    case 2:
-      _date_str[0] = 'F';
-      _date_str[1] = 'e';
-      _date_str[2] = 'b';
+    case FEBURARY:
+      Context::print("Feb\0", MONTH);
       break;
-    case 3:
-      _date_str[0] = 'M';
-      _date_str[1] = 'a';
-      _date_str[2] = 'r';
+    case MARCH:
+      Context::print("Mar\0", MONTH);
       break;
-    case 4:
-      _date_str[0] = 'A';
-      _date_str[1] = 'p';
-      _date_str[2] = 'r';
+    case APRIL:
+      Context::print("Apr\0", MONTH);
       break;
-    case 5:
-      _date_str[0] = 'M';
-      _date_str[1] = 'a';
-      _date_str[2] = 'y';
+    case MAY:
+      Context::print("May\0", MONTH);
       break;
-    case 6:
-      _date_str[0] = 'J';
-      _date_str[1] = 'u';
-      _date_str[2] = 'n';
+    case JUNE:
+      Context::print("Jun\0", MONTH);
       break;
-    case 7:
-      _date_str[0] = 'J';
-      _date_str[1] = 'u';
-      _date_str[2] = 'l';
+    case JULY:
+      Context::print("Jul\0", MONTH);
       break;
-    case 8:
-      _date_str[0] = 'A';
-      _date_str[1] = 'u';
-      _date_str[2] = 'g';
+    case AUGUST:
+      Context::print("Aug\0", MONTH);
       break;
-    case 9:
-      _date_str[0] = 'S';
-      _date_str[1] = 'e';
-      _date_str[2] = 'p';
+    case SEPTEMBER:
+      Context::print("Sep\0", MONTH);
       break;
-    case 10:
-      _date_str[0] = 'O';
-      _date_str[1] = 'c';
-      _date_str[2] = 't';
+    case OCTOBER:
+      Context::print("Oct\0", MONTH);
       break;
-    case 11:
-      _date_str[0] = 'N';
-      _date_str[1] = 'o';
-      _date_str[2] = 'v';
+    case NOVEMBER:
+      Context::print("Nov\0", MONTH);
       break;
-    case 12:
-      _date_str[0] = 'D';
-      _date_str[1] = 'e';
-      _date_str[2] = 'c';
+    case DECEMBER:
+      Context::print("Dec\0", MONTH);
       break;
     default:
-      _date_str[0] = 'E';
-      _date_str[1] = 'R';
-      _date_str[2] = 'R';
+      Context::print("ERR\0", MONTH);
   }
+}
+
+void Calendar::printDay(void)
+{
+  unsigned int high, low;
+  char output[3] = "XX\0";
 
   high = _day / 10;
   low = _day % 10;
-  _date_str[4] = (char)(high | 0x30); 
-  _date_str[5] = (char)(low | 0x30);
+  output[0] = (char)(high | 0x30); 
+  output[1] = (char)(low | 0x30);
+
+  Context::print(output, DAY);
+}
+
+void Calendar::printYear(void)
+{
+  unsigned int high, low;
+  char output[5] = "XXXX\0";
 
   high = _year / 1000;
   low = _year % 1000;
-  _date_str[7] = (char)(high | 0x30);
+  output[0] = (char)(high | 0x30);
   high = low / 100;
   low = low % 100;
-  _date_str[8] = (char)(high | 0x30);
+  output[1] = (char)(high | 0x30);
   high = low / 10;
   low = low % 10;
-  _date_str[9] = (char)(high | 0x30);
-  _date_str[10] = (char)(low | 0x30);
+  output[2] = (char)(high | 0x30);
+  output[3] = (char)(low | 0x30);
 
-  while(_lcd -> isBusy());
-  _lcd -> setDDRAMAddr(0x00);         // Set DDRAM Address to first line
-  while(_lcd -> isBusy());
-  _lcd -> print(_date_str);
+  Context::print(output, YEAR);
+}
+
+void Calendar::printTimeSegment(uint8_t segment)
+{
+  uint8_t high, low;                  // High and low base 10 integer digits
+  char output[3] = "XX\0";
+
+  switch (segment) {
+    case HOUR:
+      high = _hour / 10;
+      low = _hour % 10;
+      break;
+    case MINUTE:
+      high = _minute / 10;
+      low = _minute % 10;
+      break;
+    default:
+      high = _second / 10;
+      low = _second % 10;
+  }
+  
+  output[0] = (char)(high | 0x30);
+  output[1] = (char)(low | 0x30);
+
+  Context::print(output, segment);
 }

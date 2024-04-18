@@ -41,6 +41,10 @@
 #define INSTRUCTION   0x00
 #define DATA          0x01
 
+// Begining of line address
+#define LCD_LINE1     0x00
+#define LCD_LINE2     0x40
+
 class LiquidCrystal 
 {
 public:
@@ -51,23 +55,9 @@ public:
                 uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7);
   virtual ~LiquidCrystal() { delete [] _data_pins; }
 
-  LiquidCrystal(const LiquidCrystal &lcd); 
-  // overload the '=' operator in this class and all derived classes (?)
-
   void init(uint8_t mode, uint8_t font=LCD_5x8FONT);
   void clearDisplay(void) const { write(LCD_CLEARDISPLAY, INSTRUCTION); }
   void returnHome(void) const { write(LCD_RETURNHOME, INSTRUCTION); }
-
-  /*********************************************************************************************************
-  *         shift_dir        |        dsp_shift       | Description
-  * --------------------------------------------------------------------------------------------------------
-  *   LCD_ENTRYINCREMENT     |   LCD_DISPLAYSTATIC    | shift address right following read/write operations 
-  *   LCD_ENTRYDECREMENT     |   LCD_DISPLAYSTATIC    | shift address left following read/write operations
-  *   LCD_ENTRYINCREMENT     |   LCD_DISPLAYDYNAMIC   | shift entire display right following read/write operations 
-  *   LCD_ENTRYDECREMENT     |   LCD_DISPLAYDYNAMIC   | shift entire display left following read/write operations
-  *********************************************************************************************************/
-  void setEntryMode(uint8_t shift_dir, uint8_t dsp_shift) const
-  { write((LCD_ENTRYMODESET | shift_dir | dsp_shift), INSTRUCTION); }
 
   /*********************************************
   * dsp_pwr   : LCD_DISPLAYON | LCD_DISPLAYOFF
@@ -91,21 +81,29 @@ public:
   bool isBusy(void) const { return ((read(INSTRUCTION) >> 7) & 0x01); }
   uint8_t getAddrCntr(void) const { return (read(INSTRUCTION) & 0x7F); }
 
-  // !!! Input strings should explicitly be NULL terminated ('\0') !!!
-  unsigned int print(char *str);
-
-protected:
-  void write(uint8_t val, uint8_t reg_sel) const;
-  void write_enable(uint8_t val) const;
-
-  uint8_t read(uint8_t reg_sel) const;
-  uint8_t read_enable(void) const;
-
   // Address range in 1-line mode:  0x00 - 0x4F
   // Address range in 2-line mode:  0x00 - 0x27 (line one)
   //                                0x40 - 0x67 (line two)
   void setDDRAMAddr(uint8_t addr) const { write((LCD_SETDDRAMADDR | addr), INSTRUCTION); }
   void setCGRAMAddr(uint8_t addr) const { write((LCD_SETCGRAMADDR | addr), INSTRUCTION); }
+
+  void write(uint8_t val, uint8_t reg_sel) const;
+  uint8_t read(uint8_t reg_sel) const;
+
+protected:
+  /*********************************************************************************************************
+  *         shift_dir        |        dsp_shift       | Description
+  * --------------------------------------------------------------------------------------------------------
+  *   LCD_ENTRYINCREMENT     |   LCD_DISPLAYSTATIC    | shift address right following read/write operations 
+  *   LCD_ENTRYDECREMENT     |   LCD_DISPLAYSTATIC    | shift address left following read/write operations
+  *   LCD_ENTRYINCREMENT     |   LCD_DISPLAYDYNAMIC   | shift entire display right following read/write operations 
+  *   LCD_ENTRYDECREMENT     |   LCD_DISPLAYDYNAMIC   | shift entire display left following read/write operations
+  *********************************************************************************************************/
+  void setEntryMode(uint8_t shift_dir, uint8_t dsp_shift) const           // Should only be called once during startup
+  { write((LCD_ENTRYMODESET | shift_dir | dsp_shift), INSTRUCTION); }
+
+  void write_enable(uint8_t val) const;
+  uint8_t read_enable(void) const;
 
 private:
   uint8_t _rs_pin;

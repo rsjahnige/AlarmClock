@@ -7,36 +7,57 @@ JoyStick::JoyStick(uint8_t xPin, uint8_t yPin, uint8_t swPin)
   _sw_pin = swPin;
 
   pinMode(_sw_pin, INPUT);
+  digitalWrite(_sw_pin, HIGH);
 }
 
-void JoyStick::listen(void) 
+uint8_t JoyStick::listen(void) 
 {
-  uint8_t swState = LOW; 
+  uint8_t swState; 
   int xState, yState;
+  unsigned long counter;
+  unsigned long timer = millis();
+  uint8_t result = 0;
 
-  while (true) {
+  do {
     swState = digitalRead(_sw_pin);
     if (swState != SW_REST) {
-      Serial.println("Button pressed");
+      counter = millis();
+      while (swState != SW_REST) swState = digitalRead(_sw_pin);
+      counter = millis() - counter;
+      if (counter > 750) {              // Switch hold
+        result = JS_HOLD;
+      } else {                          // Switch pressed
+        result = JS_PRESS;
+      }
       delay(250);
     }
 
     xState = analogRead(_x_pin);
-    if (xState < (XY_REST - 100)) {
-      Serial.println("Negative X-move");
-      delay(500);
-    } else if (xState > (XY_REST + 100)) {
-      Serial.println("Positive X-move");
-      delay(500);
+    if (xState < (XY_REST - 100)) {       // Negative x-move
+      delay(250);
+      xState = analogRead(_x_pin);
+      if (xState < (XY_REST - 100)){      // Double negative x or negative x-hold
+        result = JS_BACK;
+        delay(250);
+      } else {
+        result = JS_LEFT;
+      }
+    } else if (xState > (XY_REST + 100)) {    // Positive x-move
+      result = JS_RIGHT;
+      delay(250);
     }
 
     yState = analogRead(_y_pin);
-    if (yState < (XY_REST - 100)) {
-      Serial.println("Negative Y-move");
-      delay(500);
-    } else if (yState > (XY_REST + 100)) {
-      Serial.println("Positive Y-move");
-      delay(500);
+    if (yState < (XY_REST - 100)) {           // Positive y-move
+      result = JS_UP;
+      delay(250);
+    } else if (yState > (XY_REST + 100)) {    // Negative y-move
+      result = JS_DOWN;
+      delay(250);
     }
-  }
+
+    timer = millis() - timer;
+  } while (timer < 1000);
+
+  return result;
 }

@@ -39,21 +39,6 @@ LiquidCrystal::LiquidCrystal(uint8_t rsPin, uint8_t rwPin, uint8_t enablePin,
   _function_set = LCD_FUNCTIONSET | LCD_8BITMODE;
 }
 
-LiquidCrystal::LiquidCrystal(const LiquidCrystal &lcd)
-{
-  _rs_pin = lcd._rs_pin;
-  _rw_pin = lcd._rw_pin;
-  _enable_pin = lcd._enable_pin;
-
-  _num_pins = lcd._num_pins;
-  _data_pins = new char[_num_pins];
-  for (int i=0; i < _num_pins; i++) {
-    _data_pins[i] = lcd._data_pins[i];
-  } 
-
-  _function_set = lcd._function_set;
-}
-
 void LiquidCrystal::init(uint8_t mode, uint8_t font)
 {
   // Set modes for Register Select, Read/Write, and Enable pins
@@ -80,22 +65,6 @@ void LiquidCrystal::init(uint8_t mode, uint8_t font)
   setEntryMode(LCD_ENTRYINCREMENT, LCD_DISPLAYSTATIC);
 }
 
-unsigned int LiquidCrystal::print(char *str)
-{
-  unsigned int index = 0;
-
-  while (str[index] != '\0') {
-    uint8_t id = int(str[index]);
-    write(id, DATA);
-    index++;
-  }
-
-  return index;
-}
-
-/****************************
->> Protected member functions
-****************************/
 void LiquidCrystal::write(uint8_t val, uint8_t reg_sel) const
 {
   // Ensure data pins are set to OUTPUT

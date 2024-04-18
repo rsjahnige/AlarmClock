@@ -1,29 +1,66 @@
 #ifndef CALENDAR_H
 #define CALENDAR_H
 
-#include "LiquidCrystal.h"
 #include "Arduino.h"
+#include "Context.h"
+#include "LiquidCrystal.h"
 
-class Calendar
+#define CALENDAR 0x01      // Type identifier
+
+// Months of the year -- KEEP 0 INDEX ??
+#define JANUARY   0x00
+#define FEBURARY  0x01
+#define MARCH     0x02
+#define APRIL     0x03
+#define MAY       0x04
+#define JUNE      0x05
+#define JULY      0x06
+#define AUGUST    0x07
+#define SEPTEMBER 0x08 
+#define OCTOBER   0x09
+#define NOVEMBER  0x0a
+#define DECEMBER  0x0b
+
+// LCD Address locations
+#define MONTH     0x00 
+#define DAY       0x04 
+#define YEAR      0x07 
+#define HOUR      0x40 
+#define MINUTE    0x43 
+#define SECOND    0x46
+
+class Calendar : public Context
 {
 public:
   Calendar(const LiquidCrystal *lcd);
-  void display(void);
+
+  void display(void) override;
+  void refresh(void) override;
+  uint8_t type(void) override { return CALENDAR; }
+
+  void shiftRight(void) override;
+  void shiftLeft(void) override;
+  void shiftUp(void) override;
+  void shiftDown(void) override;
+  void buttonHold(void) override;
+
+  uint8_t updateDateTime(void);
 
 protected:
-  void update(void);
-  void printTime(void);
-  void printDate(void);
+  void printMonth(void);
+  void printDay(void);
+  void printYear(void);
+
+  void printTimeSegment(uint8_t segment);
 
 private:
   unsigned int _year;
-  uint8_t _month, _day; 
+  uint8_t _month, _day;     
   uint8_t _hour, _minute, _second;
+  uint8_t _offset;                 // Used to set seconds offset from system clock when user sets the time                   
 
-  char *_date_str = "XXX 00 0000\0";
-  char *_time_str = "00:00:00\0";
-
-  LiquidCrystal *_lcd;
+  //const char *_date_format = "XXX XX XXXX\0";
+  //const char *_time_format = "XX:XX:XX\0";
 };
 
 #endif
