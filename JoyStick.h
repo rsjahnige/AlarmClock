@@ -13,8 +13,7 @@
 #define JS_LEFT   0x03
 #define JS_RIGHT  0x04
 #define JS_DOWN   0x05
-#define JS_UP     0x06
-#define JS_BACK   0x07    
+#define JS_UP     0x06    
 
 class JoyStick 
 {

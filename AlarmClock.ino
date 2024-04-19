@@ -9,18 +9,20 @@
 #include "JoyStick.h"
 
 #include "Context.h"
+#include "Menu.h"
 #include "Calendar.h"
 #include "TempHumid.h"
 
-#define BUTTON    11        // Pin to read fo button click
+#define BUTTON    11        // Pin to read for button click
 
 LiquidCrystal lcd(3,4,5,6,7,8,9);
 JoyStick ctrl(A0,A1,2);
 
+Menu menu(&lcd);
 Calendar clk(&lcd);
 TempHumid env(&lcd, 10);
 
-Context *view = &env;
+Context *view = &clk;
 
 void setup() {
   Serial.begin(250000);
@@ -35,11 +37,13 @@ void setup() {
 
 void loop() {
   uint8_t usr_action = 0;
+  uint8_t usr_option;
 
   unsigned long timer = millis() + 250;
   while (timer > millis()) {
     if (digitalRead(BUTTON) == LOW) {
-      view = &clk;
+      // Return to main menu
+      view = &menu;
       view -> changeContext();
     }
   }
@@ -50,10 +54,16 @@ void loop() {
       view -> buttonHold();
       break;
     case JS_PRESS:
-      view -> buttonPress();
-      break;
-    case JS_BACK:                      // Added additional button for this functionality
-      Serial.println("Go Back");
+      usr_option = view -> buttonPress();
+      switch (usr_option) {
+        case CALENDAR:
+          view = &clk;
+          break;
+        case TEMPHUMID:
+          view = &env;
+          break;
+      }
+      view -> changeContext();
       break;
     case JS_LEFT:
       view -> shiftLeft();

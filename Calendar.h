@@ -5,7 +5,7 @@
 #include "Context.h"
 #include "LiquidCrystal.h"
 
-#define CALENDAR 0x01      // Type identifier
+#define CALENDAR 0x31      // Type identifier - needs to match Menu list index 
 
 // Months of the year -- KEEP 0 INDEX ??
 #define JANUARY   0x00
@@ -57,10 +57,7 @@ private:
   unsigned int _year;
   uint8_t _month, _day;     
   uint8_t _hour, _minute, _second;
-  uint8_t _offset;                 // Used to set seconds offset from system clock when user sets the time                   
-
-  //const char *_date_format = "XXX XX XXXX\0";
-  //const char *_time_format = "XX:XX:XX\0";
+  uint8_t _offset;                 // Seconds offset from system clock when user sets the time                   
 };
 
 #endif

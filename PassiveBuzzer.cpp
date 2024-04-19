@@ -5,7 +5,7 @@ PassiveBuzzer::PassiveBuzzer(uint8_t pin, melody tune)
   _pin = pin;
 
   switch (tune) {
-    case ALLEGRO: 
+    case TUNE_ALLEGRO: 
       _melody.pitch = allegro_pitch;
       _melody.rhythm = allegro_rhythm;
       _melody.length = 23;

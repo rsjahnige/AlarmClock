@@ -34,14 +34,8 @@ uint8_t JoyStick::listen(void)
 
     xState = analogRead(_x_pin);
     if (xState < (XY_REST - 100)) {       // Negative x-move
+      result = JS_LEFT;
       delay(250);
-      xState = analogRead(_x_pin);
-      if (xState < (XY_REST - 100)){      // Double negative x or negative x-hold
-        result = JS_BACK;
-        delay(250);
-      } else {
-        result = JS_LEFT;
-      }
     } else if (xState > (XY_REST + 100)) {    // Positive x-move
       result = JS_RIGHT;
       delay(250);

@@ -4,6 +4,8 @@
 #include "Arduino.h"
 #include "Context.h"
 
+#define TEMPHUMID 0x32      // Type identifier - needs to match Menu list index 
+
 // LCD Address locations
 #define TEMP      0x06
 #define HUMIDITY  0x4a
@@ -15,6 +17,7 @@ public:
 
   void display(void) override;
   void refresh(void) override;
+  uint8_t type(void) override { return TEMPHUMID; }
 
   void buttonHold(void) override { return; }      // Context mode switching is prohibited
 

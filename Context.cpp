@@ -80,7 +80,9 @@ char Context::buttonPress(void)
     while(_lcd -> isBusy());
     _lcd -> setDDRAMAddr(_csr_position);     // Ensure DDRAM is being read
     while(_lcd -> isBusy());
-    result = _lcd -> read(_csr_position);
+    result = (char)(_lcd -> read(DATA));
+    while(_lcd -> isBusy());
+    _lcd -> setDDRAMAddr(_csr_position);     // Set cursor position back to read location
   }
 
   return result;

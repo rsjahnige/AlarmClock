@@ -96,7 +96,7 @@
 
 #include "Arduino.h"
 
-enum melody {TUNE_DEFAULT, ALLEGRO};
+enum melody {TUNE_DEFAULT, TUNE_ALLEGRO};
 
 class PassiveBuzzer 
 {
