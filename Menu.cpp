@@ -16,7 +16,6 @@ Menu::Menu(const LiquidCrystal *lcd, uint8_t num_options, char **options) : Cont
   }
 }
 
-// Pointers to functions cannot be deleted
 Menu::~Menu()
 {
   for (int i=0; i < _size; i++) 
@@ -51,4 +50,35 @@ void Menu::shiftUp(void)
   } else {
     Context::shiftUp();
   }
+}
+
+void Menu::addOption(char *new_option)
+{
+  char **temp = new char*[_size+1];
+
+  for (int i=0; i < _size; i++) {
+    temp[i] = _options[i];
+    delete _options[i];
+  }
+  temp[_size] = new_option;
+
+  delete [] _options;
+
+  _options = temp;
+  _size += 1;
+}
+
+void Menu::rmOption(uint8_t index) 
+{
+  char **temp = new char*[_size-1];
+
+  for (int i=0; i < _size; i++) {
+    if (i != index) temp[i] = _options[i];
+    delete _options[i];
+  }
+
+  delete [] _options;
+  
+  _options = temp;
+  _size -= 1;
 }

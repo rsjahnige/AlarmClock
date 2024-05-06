@@ -5,7 +5,7 @@
 #include "Context.h"
 #include "LiquidCrystal.h"
 
-#define CALENDAR 0x31      // Type identifier - needs to match Menu list index 
+#define CALENDAR 0x31      // Type identifier - needs to match Menu.h character index
 
 // Months of the year -- KEEP 0 INDEX ??
 #define JANUARY   0x00

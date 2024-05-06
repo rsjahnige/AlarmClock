@@ -34,7 +34,7 @@ public:
   virtual void refresh(void);  
   virtual uint8_t type(void) { return CONTEXT; } 
 
-  // !!! Input strings should explicitly be NULL terminated ('\0')        !!!
+  // !!! Input strings should explicitly be NULL terminated ('\0')        !!!     
   // !!! If pos=0xFF, then str will be printed starting at _csr_position  !!!
   virtual unsigned int print(char *str, uint8_t pos=0xFF) final;
 

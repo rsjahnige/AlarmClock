@@ -1,10 +1,11 @@
 /***************************************************
 >> File: AlarmClock.ino
 >> Author: Ryan Jahnige
->> Description: Master file
+>> Description: Main file
 ***************************************************/
 
 #include "Arduino.h"
+
 #include "LiquidCrystal.h"
 #include "JoyStick.h"
 
@@ -22,7 +23,7 @@ Menu menu(&lcd);
 Calendar clk(&lcd);
 TempHumid env(&lcd, 10);
 
-Context *view = &clk;
+Context *view = &clk;     // Default behavior is to startup with clock visible
 
 void setup() {
   Serial.begin(250000);
@@ -30,7 +31,7 @@ void setup() {
   delay(500);
   view -> setContext();
   delay(500);
-  view -> display();          // Default behavior is to startup with clock visible
+  view -> display();          
 
   pinMode(BUTTON, INPUT_PULLUP);
 }
@@ -63,7 +64,7 @@ void loop() {
           view = &env;
           break;
       }
-      view -> changeContext();
+      if (usr_option != '\0') view -> changeContext();
       break;
     case JS_LEFT:
       view -> shiftLeft();

@@ -3,10 +3,13 @@
 
 #include "Arduino.h"
 #include "Context.h"
+#include "DHT11.h"
+
+using namespace ThermoHygrometer;
 
 #define TEMPHUMID 0x32      // Type identifier - needs to match Menu list index 
 
-// LCD Address locations
+// LCD Address locations for start of sensor values
 #define TEMP      0x06
 #define HUMIDITY  0x4a
 
@@ -14,6 +17,7 @@ class TempHumid : public Context
 {
 public:
   TempHumid(const LiquidCrystal *lcd, uint8_t dataPin);
+  ~TempHumid();
 
   void display(void) override;
   void refresh(void) override;
@@ -22,14 +26,14 @@ public:
   void buttonHold(void) override { return; }      // Context mode switching is prohibited
 
 protected:
-  bool readData(void);
-  void printData(uint8_t addr, uint8_t integer, uint8_t decimal);
+  void printData(uint8_t addr);
 
 private:
-  uint8_t _data_pin; 
+  DHT11 *_sensor;
 
-  uint8_t _humid_int, _humid_dec;
-  uint8_t _temp_int, _temp_dec;    
+  // Currently displayed temperature and humidity values
+  RealNum _dsp_temp;
+  RealNum _dsp_humid;
 };
 
 #endif

@@ -1,3 +1,10 @@
+/*  
+  This could be implemented as a Linked List so that user can add and remove 
+  options without reinitializing the array each time (e.g., when dealing with alarms).
+  Would the effort to restructure this class outweigh the benifits of such 
+  an implementation?
+*/
+
 #ifndef MENU_H
 #define MENU_H
 
@@ -12,12 +19,17 @@ public:
   Menu(const LiquidCrystal *lcd, uint8_t num_options=3, char **options=nullptr);
   ~Menu();
 
-  void display(void) override;
+  virtual void display(void) override;
 
-  void shiftLeft(void) override { return; }
-  void shiftRight(void) override { return; }
-  void shiftDown(void) override;
-  void shiftUp(void) override;
+  virtual void shiftLeft(void) override { return; }
+  virtual void shiftRight(void) override { return; }
+  virtual void shiftDown(void) override;
+  virtual void shiftUp(void) override;
+
+protected:
+  /*** !!! Untested functions !!! ***/
+  virtual void addOption(char *option) final;
+  virtual void rmOption(uint8_t index) final;
 
 private:
   char **_options;

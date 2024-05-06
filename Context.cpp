@@ -74,7 +74,7 @@ void Context::shiftUp(void)
 
 char Context::buttonPress(void)
 {
-  char result;
+  char result = '\0';						// Returns null character when not in INPUT mode
 
   if (_mode == CNTX_INPUT) {
     while(_lcd -> isBusy());
@@ -109,6 +109,11 @@ void Context::refresh(void)
   _csr_position = _lcd -> getAddrCntr();
 }
 
+/*  
+  TODO - I don't like that derived classes need to deal with NULL termination. 
+  Would a size parameter be a better option? - Calendar an Menu classes would need
+  to be updated if we choose to take this path
+*/
 unsigned int Context::print(char *str, uint8_t pos)
 {
   unsigned int index = 0;
@@ -118,7 +123,7 @@ unsigned int Context::print(char *str, uint8_t pos)
   else _lcd -> setDDRAMAddr(_csr_position);       // Done to ensure that the DDRAM is being written to
 
   while (str[index] != '\0') {
-    uint8_t id = int(str[index]);
+    uint8_t id = int(str[index]);                 // Need to revisit this logic; why am I using int() to cast to a uint8_t?
     while (_lcd -> isBusy());
     _lcd -> write(id, DATA);
     index++;
@@ -126,5 +131,6 @@ unsigned int Context::print(char *str, uint8_t pos)
 
   while (_lcd -> isBusy());
   _csr_position = _lcd -> getAddrCntr();
+
   return index;
 }
