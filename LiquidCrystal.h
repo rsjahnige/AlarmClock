@@ -1,7 +1,6 @@
 #ifndef LIQUIDCRYSTAL_H
 #define LIQUIDCRYSTAL_H
 
-#include <inttypes.h>
 #include "Arduino.h"
 
 // Instruction Patterns
