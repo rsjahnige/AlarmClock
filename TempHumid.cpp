@@ -43,7 +43,7 @@ void TempHumid::refresh(void)
 void TempHumid::printData(uint8_t addr) 
 {
   uint8_t index = 0;
-  char str[10] = {0x20};              // 10 is max length of a temperature reading string (including units)
+  char str[10] = {0x20};              // 10 is max length of a temperature reading string (including units); 0x20 is bit pattern for empty space
 
   str[9] = '\0';                      // Add NULL terminator for compliance with Context::print() function             
   Context::print(str, addr);          // Clear currently displayed values
