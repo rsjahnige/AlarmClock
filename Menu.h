@@ -3,6 +3,8 @@
   options without reinitializing the array each time (e.g., when dealing with alarms).
   Would the effort to restructure this class outweigh the benifits of such 
   an implementation?
+    - Using a templated class could be benificial for when an Alarm class is defined
+      - How will a character sting vs an Alarm object be printed to the LCD ??
 */
 
 #ifndef MENU_H
