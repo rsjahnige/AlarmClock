@@ -1,3 +1,12 @@
+/*********************************************************************
+>>  File: LiquidCrystal.h
+>>  Author: Ryan Jahnige
+>>
+>>  Description: Class definition for interacting with an LCD Module. 
+>>                The following code was written in complance with 
+>>                the specification for LCD Module 1602A-1.
+**********************************************************************/
+
 #ifndef LIQUIDCRYSTAL_H
 #define LIQUIDCRYSTAL_H
 
