@@ -70,7 +70,7 @@ uint8_t Calendar::updateDateTime(void)
   _second = seconds;
 
   // !!! TODO - make sure this logic works !!! 
-  // !!! greater than has been used for days to mitigate adverse affects of possible user error !!!
+  // !!! greater than has been used for days to mitigate adverse effects of possible user error !!!
   if ((result == HOUR) && (_hour == 0)) {
     if (((_month % 2) == 1) && (_day >= 31)) {              // January, March, May, July, September, November
       _day = 1; 
