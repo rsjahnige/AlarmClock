@@ -12,9 +12,9 @@ TempHumid::~TempHumid()
 
 void TempHumid::display(void)
 {
-  Context::print("Temp: ", LCD_LINE1);
+  Context::print("Temp: \0", LCD_LINE1);
   printData(TEMP);
-  Context::print("Humidity: ", LCD_LINE2);
+  Context::print("Humidity: \0", LCD_LINE2);
   printData(HUMIDITY);
 }
 

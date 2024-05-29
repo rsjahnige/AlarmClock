@@ -32,7 +32,7 @@ public:
   virtual void buttonHold(void);
 
   // These functions should be overridden in each derived class     
-  virtual void display(void) { print("Context::ERROR"); }
+  virtual void display(void) { print("Context::ERROR\0"); }
   virtual void refresh(void);  
   virtual uint8_t type(void) { return CONTEXT; } 
 
