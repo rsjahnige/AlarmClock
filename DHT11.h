@@ -1,7 +1,7 @@
 #ifndef DHT11_H
 #define DHT11_H
 
-#include "Arduino.h"
+#include <Arduino.h>
 
 namespace ThermoHygrometer 
 {

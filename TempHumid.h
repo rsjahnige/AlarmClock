@@ -1,7 +1,7 @@
 #ifndef TEMPHUMID_H
 #define TEMPHUMID_H
 
-#include "Arduino.h"
+#include <Arduino.h>
 #include "Context.h"
 #include "DHT11.h"
 

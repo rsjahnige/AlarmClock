@@ -10,7 +10,7 @@
 #ifndef LIQUIDCRYSTAL_H
 #define LIQUIDCRYSTAL_H
 
-#include "Arduino.h"
+#include <Arduino.h>
 
 // Instruction Patterns
 #define LCD_CLEARDISPLAY 	0x01

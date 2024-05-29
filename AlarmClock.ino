@@ -5,7 +5,7 @@
 >>  Description: Main file
 **********************************************************************/
 
-#include "Arduino.h"
+#include <Arduino.h>
 
 #include "LiquidCrystal.h"
 #include "JoyStick.h"

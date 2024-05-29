@@ -1,7 +1,7 @@
 #ifndef JOYSTICK_H
 #define JOYSTICK_H
 
-#include "Arduino.h"
+#include <Arduino.h>
 
 // Resting pin states
 #define SW_REST HIGH

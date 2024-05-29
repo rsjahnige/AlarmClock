@@ -1,7 +1,7 @@
 #ifndef PASSIVEBUZZER_H
 #define PASSIVEBUZZER_H
 
-#include "Arduino.h"
+#include <Arduino.h>
 
 namespace Buzzer
 {
