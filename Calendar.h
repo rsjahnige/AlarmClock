@@ -30,6 +30,8 @@
 #define MINUTE    0x43 
 #define SECOND    0x46
 
+using LCD1602A::LiquidCrystal;
+
 class Calendar : public Context
 {
 public:

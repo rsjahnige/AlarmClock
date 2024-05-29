@@ -53,75 +53,78 @@
 #define LCD_LINE1     0x00
 #define LCD_LINE2     0x40
 
-class LiquidCrystal 
+namespace LCD1602A
 {
-public:
-	LiquidCrystal(uint8_t rsPin, uint8_t rwPin, uint8_t enablePin, 
-                uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7);
-  LiquidCrystal(uint8_t rsPin, uint8_t rwPin, uint8_t enablePin, 
-                uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
-                uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7);
-  virtual ~LiquidCrystal() { delete [] _data_pins; }
-
-  void init(uint8_t mode, uint8_t font=LCD_5x8FONT);
-  void clearDisplay(void) const { write(LCD_CLEARDISPLAY, INSTRUCTION); }
-  void returnHome(void) const { write(LCD_RETURNHOME, INSTRUCTION); }
-
-  /*********************************************
-  * dsp_pwr   : LCD_DISPLAYON | LCD_DISPLAYOFF
-  * csr_pwr   : LCD_CURSORON  | LCD_CURSOROFF
-  * csr_blink : LCD_BLINKON   | LCD_BLINKOFF 
-  **********************************************/
-  void displayPower(uint8_t dsp_pwr, uint8_t csr_pwr, uint8_t csr_blink) const
-  { write((LCD_DISPLAYPOWER | dsp_pwr | csr_pwr | csr_blink), INSTRUCTION); }
+  class LiquidCrystal 
+  {
+  public:
+  	LiquidCrystal(uint8_t rsPin, uint8_t rwPin, uint8_t enablePin, 
+                  uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7);
+    LiquidCrystal(uint8_t rsPin, uint8_t rwPin, uint8_t enablePin, 
+                  uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
+                  uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7);
+    virtual ~LiquidCrystal() { delete [] _data_pins; }
   
-  /************************************************************************************
-  *       dsp_shift       |     shift_dir      |              Description
-  *------------------------------------------------------------------------------------
-  *   LCD_DISPLAYSTATIC   |   LCD_SHIFTLEFT    | shift cursor left
-  *   LCD_DISPLAYSTATIC   |   LCD_SHIFTRIGHT   | shift cursor right
-  *   LCD_DISPLAYSHIFT    |   LCD_SHIFTLEFT    | shift display left (cursor follows) 
-  *   LCD_DISPLAYSHIFT    |   LCD_SHIFTRIGHT   | shift display right (cursor follows)
-  ************************************************************************************/
-  void displayShift(uint8_t dsp_shift, uint8_t shift_dir) const
-  { write((LCD_DISPLAYSET | dsp_shift | shift_dir), INSTRUCTION); }
-
-  bool isBusy(void) const { return ((read(INSTRUCTION) >> 7) & 0x01); }
-  uint8_t getAddrCntr(void) const { return (read(INSTRUCTION) & 0x7F); }
-
-  // Address range in 1-line mode:  0x00 - 0x4F
-  // Address range in 2-line mode:  0x00 - 0x27 (line one)
-  //                                0x40 - 0x67 (line two)
-  void setDDRAMAddr(uint8_t addr) const { write((LCD_SETDDRAMADDR | addr), INSTRUCTION); }
-  void setCGRAMAddr(uint8_t addr) const { write((LCD_SETCGRAMADDR | addr), INSTRUCTION); }
-
-  void write(uint8_t val, uint8_t reg_sel) const;
-  uint8_t read(uint8_t reg_sel) const;
-
-protected:
-  /*********************************************************************************************************
-  *         shift_dir        |        dsp_shift       | Description
-  * --------------------------------------------------------------------------------------------------------
-  *   LCD_ENTRYINCREMENT     |   LCD_DISPLAYSTATIC    | shift address right following read/write operations 
-  *   LCD_ENTRYDECREMENT     |   LCD_DISPLAYSTATIC    | shift address left following read/write operations
-  *   LCD_ENTRYINCREMENT     |   LCD_DISPLAYDYNAMIC   | shift entire display right following read/write operations 
-  *   LCD_ENTRYDECREMENT     |   LCD_DISPLAYDYNAMIC   | shift entire display left following read/write operations
-  *********************************************************************************************************/
-  void setEntryMode(uint8_t shift_dir, uint8_t dsp_shift) const           // Should only be called once during startup
-  { write((LCD_ENTRYMODESET | shift_dir | dsp_shift), INSTRUCTION); }
-
-  void write_enable(uint8_t val) const;
-  uint8_t read_enable(void) const;
-
-private:
-  uint8_t _rs_pin;
-  uint8_t _rw_pin;
-  uint8_t _enable_pin;
-
-  uint8_t _num_pins;
-  uint8_t *_data_pins; 
-
-  uint8_t _function_set;
+    void init(uint8_t mode, uint8_t font=LCD_5x8FONT);
+    void clearDisplay(void) const { write(LCD_CLEARDISPLAY, INSTRUCTION); }
+    void returnHome(void) const { write(LCD_RETURNHOME, INSTRUCTION); }
+  
+    /*********************************************
+    * dsp_pwr   : LCD_DISPLAYON | LCD_DISPLAYOFF
+    * csr_pwr   : LCD_CURSORON  | LCD_CURSOROFF
+    * csr_blink : LCD_BLINKON   | LCD_BLINKOFF 
+    **********************************************/
+    void displayPower(uint8_t dsp_pwr, uint8_t csr_pwr, uint8_t csr_blink) const
+    { write((LCD_DISPLAYPOWER | dsp_pwr | csr_pwr | csr_blink), INSTRUCTION); }
+    
+    /************************************************************************************
+    *       dsp_shift       |     shift_dir      |              Description
+    *------------------------------------------------------------------------------------
+    *   LCD_DISPLAYSTATIC   |   LCD_SHIFTLEFT    | shift cursor left
+    *   LCD_DISPLAYSTATIC   |   LCD_SHIFTRIGHT   | shift cursor right
+    *   LCD_DISPLAYSHIFT    |   LCD_SHIFTLEFT    | shift display left (cursor follows) 
+    *   LCD_DISPLAYSHIFT    |   LCD_SHIFTRIGHT   | shift display right (cursor follows)
+    ************************************************************************************/
+    void displayShift(uint8_t dsp_shift, uint8_t shift_dir) const
+    { write((LCD_DISPLAYSET | dsp_shift | shift_dir), INSTRUCTION); }
+  
+    bool isBusy(void) const { return ((read(INSTRUCTION) >> 7) & 0x01); }
+    uint8_t getAddrCntr(void) const { return (read(INSTRUCTION) & 0x7F); }
+  
+    // Address range in 1-line mode:  0x00 - 0x4F
+    // Address range in 2-line mode:  0x00 - 0x27 (line one)
+    //                                0x40 - 0x67 (line two)
+    void setDDRAMAddr(uint8_t addr) const { write((LCD_SETDDRAMADDR | addr), INSTRUCTION); }
+    void setCGRAMAddr(uint8_t addr) const { write((LCD_SETCGRAMADDR | addr), INSTRUCTION); }
+  
+    void write(uint8_t val, uint8_t reg_sel) const;
+    uint8_t read(uint8_t reg_sel) const;
+  
+  protected:
+    /*********************************************************************************************************
+    *         shift_dir        |        dsp_shift       | Description
+    * --------------------------------------------------------------------------------------------------------
+    *   LCD_ENTRYINCREMENT     |   LCD_DISPLAYSTATIC    | shift address right following read/write operations 
+    *   LCD_ENTRYDECREMENT     |   LCD_DISPLAYSTATIC    | shift address left following read/write operations
+    *   LCD_ENTRYINCREMENT     |   LCD_DISPLAYDYNAMIC   | shift entire display right following read/write operations 
+    *   LCD_ENTRYDECREMENT     |   LCD_DISPLAYDYNAMIC   | shift entire display left following read/write operations
+    *********************************************************************************************************/
+    void setEntryMode(uint8_t shift_dir, uint8_t dsp_shift) const           // Should only be called once during startup
+    { write((LCD_ENTRYMODESET | shift_dir | dsp_shift), INSTRUCTION); }
+  
+    void write_enable(uint8_t val) const;
+    uint8_t read_enable(void) const;
+  
+  private:
+    uint8_t _rs_pin;
+    uint8_t _rw_pin;
+    uint8_t _enable_pin;
+  
+    uint8_t _num_pins;
+    uint8_t *_data_pins; 
+  
+    uint8_t _function_set;
+  };
 };
 
 #endif

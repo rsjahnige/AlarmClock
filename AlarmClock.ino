@@ -17,6 +17,8 @@
 
 #define BUTTON    11        // Pin to read for button click
 
+using LCD1602A::LiquidCrystal;
+
 LiquidCrystal lcd(3,4,5,6,7,8,9);
 JoyStick ctrl(A0,A1,2);
 

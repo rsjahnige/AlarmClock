@@ -9,6 +9,8 @@
 
 #define CONTEXT 0x00            // Type identifier - derived classes need to define their own
 
+using LCD1602A::LiquidCrystal;
+
 class Context
 {
 public:
