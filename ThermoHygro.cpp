@@ -1,6 +1,6 @@
-#include "DHT11.h"
+#include "ThermoHygro.h"
 
-namespace ThermoHygrometer
+namespace DHT11
 {
   // Note that range(int8_t) = [-128,127]. Thus, the max size of the 
   // resulting string is 4 characters (including negative sign)
@@ -69,7 +69,7 @@ namespace ThermoHygrometer
     char local_result[7];         // see comment above about size specification
 
     // Append integer portion of real number
-    it = ThermoHygrometer::itos(_integer, 4, num_str);
+    it = DHT11::itos(_integer, 4, num_str);
     for (int i=0; i < it; i++) {
       local_result[index] = num_str[i];
       index += 1;
@@ -80,7 +80,7 @@ namespace ThermoHygrometer
     index += 1;
 
     // Append decimal portion of real number
-    it = ThermoHygrometer::itos(_decimal, 4, num_str);
+    it = DHT11::itos(_decimal, 4, num_str);
     for (int i=0; i < it; i++) {
       local_result[index] = num_str[i];
       index += 1;
@@ -96,16 +96,16 @@ namespace ThermoHygrometer
   }
 
   /************************
-  >> DHT11 Class Methods
+  >> ThermoHygro Class Methods
   ************************/
-  DHT11::DHT11(uint8_t dataPin, unsigned long timeDelay)
+  ThermoHygro::ThermoHygro(uint8_t dataPin, unsigned long timeDelay)
   {
     _data_pin = dataPin;
     _time_delay = timeDelay;
     _timer = millis(); 
   }
 
-  const RealNum DHT11::getTemperature()
+  const RealNum ThermoHygro::getTemperature()
   {
     unsigned long time = millis();
     if (abs(time - _timer) > _time_delay) readData();
@@ -113,7 +113,7 @@ namespace ThermoHygrometer
     return _temp;
   }
 
-  const RealNum DHT11::getHumidity()
+  const RealNum ThermoHygro::getHumidity()
   {
     unsigned long time = millis();
     if (abs(time - _timer) > _time_delay) readData();
@@ -121,7 +121,7 @@ namespace ThermoHygrometer
     return _humid;
   }
 
-  void DHT11::readData(void)
+  void ThermoHygro::readData(void)
   {
     unsigned long timer;
     unsigned int parity = 0;

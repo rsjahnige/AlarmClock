@@ -2,7 +2,7 @@
 
 TempHumid::TempHumid(const LiquidCrystal *lcd, uint8_t dataPin) : Context(lcd, CNTX_DISPLAY) 
 {
-  _sensor = new DHT11(dataPin);            
+  _sensor = new ThermoHygro(dataPin);            
 }
 
 TempHumid::~TempHumid() 

@@ -3,9 +3,9 @@
 
 #include <Arduino.h>
 
-namespace ThermoHygrometer 
+namespace DHT11 
 {
-  class DHT11;     // Forward declaration so RealNum and DHT11 can be friends
+  class ThermoHygro;     // Forward declaration so RealNum and ThermoHygro can be friends
 
   /*!!! 'result' string is NOT NULL terminated !!!*/
   // Converts 'num' to character string equivalent; Writes a maximum of 'size' 
@@ -32,18 +32,18 @@ namespace ThermoHygrometer
     // 'result' and return the number of characters written; 'size' >= 8 recommended
     uint8_t toString(uint8_t size, char *result) const;
 
-    friend class DHT11;    // Allows DHT11 to set private member variables
+    friend class ThermoHygro;    // Allows ThermoHygro to set private member variables
 
   private:
     int8_t _integer;
     uint8_t _decimal;
   };
 
-  class DHT11
+  class ThermoHygro
   {
   public:
     // Data sheet recommends a 5-second delay between read operations
-    DHT11(uint8_t dataPin, unsigned long timeDelay=5000);
+    ThermoHygro(uint8_t dataPin, unsigned long timeDelay=5000);
 
     void setDataPin(uint8_t dataPin) { _data_pin = dataPin; }
     uint8_t getDataPin(void) const { return _data_pin; }

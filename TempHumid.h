@@ -3,9 +3,9 @@
 
 #include <Arduino.h>
 #include "Context.h"
-#include "DHT11.h"
+#include "ThermoHygro.h"
 
-using namespace ThermoHygrometer;
+using namespace DHT11;
 
 #define TEMPHUMID 0x32      // Type identifier - needs to match Menu list index 
 
@@ -29,7 +29,7 @@ protected:
   void printData(uint8_t addr);
 
 private:
-  DHT11 *_sensor;
+  ThermoHygro *_sensor;
 
   // Currently displayed temperature and humidity values
   RealNum _dsp_temp;
