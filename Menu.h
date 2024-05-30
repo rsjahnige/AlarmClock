@@ -6,7 +6,7 @@
 
 #define MENU    0x01
 
-namespace UI
+namespace ListUI
 {
   template<class T>
   class Node
@@ -17,23 +17,22 @@ namespace UI
 
   private:
     T _data;
-    Node<T> *_next_link;      // Forward iteration
-    Node<T> *_last_link;      // Reverse iteration
+    Node<T> *_link;
   };
   
   template<class T>
   class Menu : public Context 
   {
   public:
-    Menu(const LiquidCrystal *lcd, uint8_t num_options=3, char **options=nullptr);
+    Menu(const LiquidCrystal *lcd);
     ~Menu();
   
-    virtual void display(void) override;
+    void display(void) override;
   
-    virtual void shiftLeft(void) override { return; }
-    virtual void shiftRight(void) override { return; }
-    virtual void shiftDown(void) override;
-    virtual void shiftUp(void) override;
+    void shiftLeft(void) override { return; }
+    void shiftRight(void) override { return; }
+    void shiftDown(void) override;
+    void shiftUp(void) override;
 
   private:
     Node<T> *_head;
