@@ -10,6 +10,8 @@
 #include "LiquidCrystal.h"
 #include "JoyStick.h"
 
+#include "List.h"
+
 #include "Context.h"
 #include "Menu.h"
 #include "Calendar.h"
@@ -18,23 +20,40 @@
 #define BUTTON    11        // Pin to read for button click
 
 using LCD1602A::LiquidCrystal;
+using LinkedList::Node;
+using namespace UserInterface;
 
+// Initialize hardware classes
 LiquidCrystal lcd(3,4,5,6,7,8,9);
 JoyStick ctrl(A0,A1,2);
 
+// Initialize main menu
+Menu::Item clock = {"1.Calendar\0", nullptr};
+Menu::Item envir = {"2.Temp&Humidity\0", nullptr};
+Menu::Item alarm = {"3.Set Alarm\0", nullptr};
+Node<Menu::Item> *head;
+
+// Initialize user interface classes
 Menu menu(&lcd);
 Calendar clk(&lcd);
 TempHumid env(&lcd, 10);
-
 Context *view = &clk;     // Default behavior is to startup with clock visible
 
 void setup() {
   Serial.begin(250000);
+
+  // Initialize LCD 
   lcd.init(LCD_2LINEMODE, LCD_5x8FONT);
   delay(500);
   view -> setContext();
   delay(500);
   view -> display();          
+
+  // Build Main Menu
+  head = new Node<Menu::Item>(clock);
+  LinkedList::insertNode(head, envir);
+  LinkedList::insertNode(head->getNextLink(), alarm);
+  menu.setNode(head);
 
   pinMode(BUTTON, INPUT_PULLUP);
 }
@@ -45,8 +64,7 @@ void loop() {
 
   unsigned long timer = millis() + 250;
   while (timer > millis()) {
-    if (digitalRead(BUTTON) == LOW) {
-      // Return to main menu
+    if (digitalRead(BUTTON) == LOW) {     // Return to main menu
       view = &menu;
       view -> changeContext();
     }
