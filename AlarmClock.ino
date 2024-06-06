@@ -17,7 +17,7 @@
 #include "Calendar.h"
 #include "TempHumid.h"
 
-#define BUTTON    11        // Pin to read for button click
+//#define BUTTON    11        // Pin to read for button click
 
 using LCD1602A::LiquidCrystal;
 using LinkedList::Node;
@@ -27,17 +27,23 @@ using namespace UserInterface;
 LiquidCrystal lcd(3,4,5,6,7,8,9);
 JoyStick ctrl(A0,A1,2);
 
-// Initialize main menu
-Menu::Item clock = {"1.Calendar\0", nullptr};
-Menu::Item envir = {"2.Temp&Humidity\0", nullptr};
-Menu::Item alarm = {"3.Set Alarm\0", nullptr};
-Node<Menu::Item> *head;
-
 // Initialize user interface classes
 Menu menu(&lcd);
 Calendar clk(&lcd);
 TempHumid env(&lcd, 10);
 Context *view = &clk;     // Default behavior is to startup with clock visible
+
+// Function used to switch between LCD display screens
+void changeView(Context* newView) {
+  view = newView;
+  view -> changeContext();
+}
+
+// Initialize main menu
+Menu::Item clock = {"1.Calendar\0", &clk, changeView};
+Menu::Item envir = {"2.Temp&Humidity\0", &env, changeView};
+Menu::Item alarm = {"3.Set Alarm\0", nullptr, nullptr};
+Node<Menu::Item> *head;
 
 void setup() {
   Serial.begin(250000);
@@ -55,13 +61,13 @@ void setup() {
   LinkedList::insertNode(head->getNextLink(), alarm);
   menu.setNode(head);
 
-  pinMode(BUTTON, INPUT_PULLUP);
+  //pinMode(BUTTON, INPUT_PULLUP);
 }
 
 void loop() {
   uint8_t usr_action = 0;
-  uint8_t usr_option;
 
+  /*
   unsigned long timer = millis() + 250;
   while (timer > millis()) {
     if (digitalRead(BUTTON) == LOW) {     // Return to main menu
@@ -69,6 +75,7 @@ void loop() {
       view -> changeContext();
     }
   }
+  */
 
   usr_action = ctrl.listen();
   switch (usr_action) {
@@ -76,16 +83,10 @@ void loop() {
       view -> buttonHold();
       break;
     case JS_PRESS:
-      usr_option = view -> buttonPress();
-      switch (usr_option) {
-        case CALENDAR:
-          view = &clk;
-          break;
-        case TEMPHUMID:
-          view = &env;
-          break;
-      }
-      if (usr_option != '\0') view -> changeContext();
+      if ((view -> type()) != MENU)
+        changeView(&menu);
+      else
+        view -> buttonPress();
       break;
     case JS_LEFT:
       view -> shiftLeft();

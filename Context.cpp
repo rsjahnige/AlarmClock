@@ -72,8 +72,9 @@ void Context::shiftUp(void)
   }
 }
 
-char Context::buttonPress(void)
+void Context::buttonPress(void)
 {
+  /*
   char result = '\0';						// Returns null character when not in INPUT mode
 
   if (_mode == CNTX_INPUT) {
@@ -84,8 +85,8 @@ char Context::buttonPress(void)
     while(_lcd -> isBusy());
     _lcd -> setDDRAMAddr(_csr_position);     // Set cursor position back to read location
   }
-
   return result;
+  */
 }
 
 void Context::buttonHold(void)

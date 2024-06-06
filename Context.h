@@ -28,7 +28,7 @@ public:
   virtual void shiftLeft(void);
   virtual void shiftDown(void);
   virtual void shiftUp(void);
-  virtual char buttonPress(void);
+  virtual void buttonPress(void);
   virtual void buttonHold(void);
 
   // These functions should be overridden in each derived class     

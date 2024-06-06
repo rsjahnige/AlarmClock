@@ -45,4 +45,10 @@ namespace UserInterface
       }
     }
   }
+
+  void Menu::buttonPress(void) 
+  {
+    Item userData = _curr_node -> getData();
+    userData.action(userData.cntx);
+  }
 }
