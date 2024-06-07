@@ -8,20 +8,6 @@
 
 #define CLOCK 0x31      // Type identifier - needs to match Menu.h character index
 
-// Months of the year -- KEEP 0 INDEX ??
-#define JANUARY   0x00
-#define FEBURARY  0x01
-#define MARCH     0x02
-#define APRIL     0x03
-#define MAY       0x04
-#define JUNE      0x05
-#define JULY      0x06
-#define AUGUST    0x07
-#define SEPTEMBER 0x08 
-#define OCTOBER   0x09
-#define NOVEMBER  0x0a
-#define DECEMBER  0x0b
-
 // LCD Address locations
 #define CLK_MONTH     0x00 
 #define CLK_DAY       0x04 
@@ -37,18 +23,60 @@ namespace UserInterface
   class Date 
   {
   public:
-    Date();
+    Date(unsigned int year=2024, uint8_t month=1, uint8_t day=1) :
+          _year(year), _month(month), _day(day) {}
 
+    unsigned int getYear(void) const    { return _year; }
+    uint8_t getMonth(void) const        { return _month; }
+    uint8_t getDay(void) const          { return _day; }
+
+    void setYear(unsigned int year)     { _year = year; }
+    void setMonth(uint8_t month)        { _month = month; }
+    void setDay(uint8_t day)            { _day = day; }
+
+    uint8_t getNumDays(void);   // Returns number of days in current month - Gregorian Calendar
+
+    void incrementYear(void)            { _year = (_year + 1) % 10000; }    // max year is 9999
+    void incrementMonth(void)           { _month = (_month % 12) + 1; }
+    void incrementDay(void)             { _day = (_day % getNumDays()) + 1; }
+
+    void decrementYear(void)            { _year = (_year + 9999) % 10000; }
+    void decrementMonth(void)           { _month = (_month == 1) ? 12 : (_month + 11) % 12; }
+    void decrementDay(void)             { _day = (_day == 1) ? getNumDays() : (_day+getNumDays()-1) %getNumDays(); }
+      
   private:
     unsigned int _year;
     uint8_t _month, _day;
   };
 
+  class Time
+  {
+  public:
+    Time(uint8_t hour=0, uint8_t minute=0, uint8_t second=0) :
+          _hour(hour), _minute(minute), _second(second) {}
+
+    uint8_t getHour(void) const     { return _hour; }
+    uint8_t getMinute(void) const   { return _minute; }
+    uint8_t getSecond(void) const   { return _second; }
+
+    void setHour(uint8_t hour)      { _hour = hour; }
+    void setMinute(uint8_t minute)  { _minute = minute; }
+    void setSecond(uint8_t second)  { _second = second; }
+
+    void incrementHour(void)        { _hour = (_hour + 1) % 24; }
+    void incrementMinute(void)      { _minute = (_minute + 1) % 60; }
+
+    void decrementHour(void)        { _hour = (_hour + 23) % 24; }
+    void decrementMinute(void)      { _minute = (_minute + 59) % 60; }
+
+  private:
+    uint8_t _hour, _minute, _second;
+  };
 
   class Clock : public Context
   {
   public:
-    Clock(const LiquidCrystal *lcd);
+    Clock(const LiquidCrystal *lcd) : Context(lcd, CNTX_DISPLAY) {}
   
     void display(void) override;
     void refresh(void) override;
@@ -58,6 +86,7 @@ namespace UserInterface
     void shiftLeft(void) override;
     void shiftUp(void) override;
     void shiftDown(void) override;
+    void buttonPress(void) override;
     void buttonHold(void) override;
   
     uint8_t updateDateTime(void);
@@ -70,9 +99,8 @@ namespace UserInterface
     void printTimeSegment(uint8_t segment);
   
   private:
-    unsigned int _year;
-    uint8_t _month, _day;     
-    uint8_t _hour, _minute, _second;
+    Date _date;
+    Time _time;
     uint8_t _offset;                 // Seconds offset from system clock when user sets the time                   
   };
 };

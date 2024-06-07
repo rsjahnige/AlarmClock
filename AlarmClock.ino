@@ -83,9 +83,9 @@ void loop() {
       view -> buttonHold();
       break;
     case JS_PRESS:
-      if ((view -> type()) != MENU)
+      if ((view -> getMode()) == CNTX_DISPLAY)
         changeView(&menu);
-      else
+      else 
         view -> buttonPress();
       break;
     case JS_LEFT:
