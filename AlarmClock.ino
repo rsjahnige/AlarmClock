@@ -52,8 +52,6 @@ Menu::Item back = {"<Back\0", &menu, changeView};
 Menu::Item addAlarm = {"+Alarm\0", nullptr, nullptr};
 Node<Menu::Item> *alarmHead;
 
-
-
 void setup() {
   Serial.begin(250000);
 
