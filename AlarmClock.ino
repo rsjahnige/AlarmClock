@@ -14,7 +14,7 @@
 
 #include "Context.h"
 #include "Menu.h"
-#include "Calendar.h"
+#include "Clock.h"
 #include "TempHumid.h"
 
 //#define BUTTON    11        // Pin to read for button click
@@ -29,7 +29,7 @@ JoyStick ctrl(A0,A1,2);
 
 // Initialize user interface classes
 Menu menu(&lcd);
-Calendar clk(&lcd);
+Clock clk(&lcd);
 TempHumid env(&lcd, 10);
 Context *view = &clk;     // Default behavior is to startup with clock visible
 
@@ -83,9 +83,9 @@ void loop() {
       view -> buttonHold();
       break;
     case JS_PRESS:
-      if ((view -> type()) != MENU)
+      if ((view -> getMode()) == CNTX_DISPLAY)
         changeView(&menu);
-      else
+      else 
         view -> buttonPress();
       break;
     case JS_LEFT:
@@ -105,6 +105,6 @@ void loop() {
   }
 
   // Make sure the clock stays up to date even when not visible
-  if ((view -> type()) != CALENDAR)
+  if ((view -> type()) != CLOCK)
     clk.updateDateTime();
 }

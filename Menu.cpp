@@ -4,9 +4,14 @@ namespace UserInterface
 {
   void Menu::display(void) 
   {
+    // Ensure Menu object is populated with at least one item
+    if (_curr_node == nullptr) {
+      Context::print("ERROR :: Menu Empty\0", LCD_LINE1);
+      return;
+    }
+
     Item item = _curr_node -> getData();
     Context::print(item.string, LCD_LINE1); 
-    Serial.println(item.string);
 
     Node<Item> *nextNode = _curr_node -> getNextLink();
     if (nextNode != nullptr) {
