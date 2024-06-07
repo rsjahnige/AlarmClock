@@ -23,17 +23,28 @@
 #define DECEMBER  0x0b
 
 // LCD Address locations
-#define MONTH     0x00 
-#define DAY       0x04 
-#define YEAR      0x07 
-#define HOUR      0x40 
-#define MINUTE    0x43 
-#define SECOND    0x46
+#define CLK_MONTH     0x00 
+#define CLK_DAY       0x04 
+#define CLK_YEAR      0x07 
+#define CLK_HOUR      0x40 
+#define CLK_MINUTE    0x43 
+#define CLK_SECOND    0x46
 
 using LCD1602A::LiquidCrystal;
 
 namespace UserInterface 
 {
+  class Date 
+  {
+  public:
+    Date();
+
+  private:
+    unsigned int _year;
+    uint8_t _month, _day;
+  };
+
+
   class Clock : public Context
   {
   public:

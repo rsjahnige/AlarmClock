@@ -21,27 +21,27 @@ namespace UserInterface
     printMonth();
     printDay();
     printYear();
-    printTimeSegment(HOUR);
-    printTimeSegment(MINUTE);
-    printTimeSegment(SECOND);
+    printTimeSegment(CLK_HOUR);
+    printTimeSegment(CLK_MINUTE);
+    printTimeSegment(CLK_SECOND);
   }
   
   void Clock::refresh(void) 
   {
     if (Context::getMode() == CNTX_DISPLAY) {
       switch (updateDateTime()) {
-        case YEAR:
+        case CLK_YEAR:
           printYear();
-        case MONTH:
+        case CLK_MONTH:
           printMonth();
-        case DAY:
+        case CLK_DAY:
           printDay();
-        case HOUR:
-          printTimeSegment(HOUR);
-        case MINUTE:
-          printTimeSegment(MINUTE);
+        case CLK_HOUR:
+          printTimeSegment(CLK_HOUR);
+        case CLK_MINUTE:
+          printTimeSegment(CLK_MINUTE);
         default:
-          printTimeSegment(SECOND);
+          printTimeSegment(CLK_SECOND);
       }
     }
   }
@@ -50,7 +50,7 @@ namespace UserInterface
   uint8_t Clock::updateDateTime(void)
   {
     long seconds;
-    uint8_t result = SECOND;
+    uint8_t result = CLK_SECOND;
   
     // Assumes refresh() is called at least every minute
     // TODO - I need to revisit this logic and consider what happens 
@@ -60,10 +60,10 @@ namespace UserInterface
   
     seconds = (seconds + _offset) % 60;
     if (seconds < _second) {
-      result = MINUTE;
+      result = CLK_MINUTE;
       if ((_minute += 1) == 60) {
         _minute = 0; 
-        result = HOUR;
+        result = CLK_HOUR;
         if ((_hour += 1) == 24) {
           _hour = 0;
         }
@@ -73,15 +73,15 @@ namespace UserInterface
   
     // !!! TODO - make sure this logic works !!! 
     // !!! greater than has been used for days to mitigate adverse effects of possible user error !!!
-    if ((result == HOUR) && (_hour == 0)) {
+    if ((result == CLK_HOUR) && (_hour == 0)) {
       if (((_month % 2) == 1) && (_day >= 31)) {              // January, March, May, July, September, November
         _day = 1; 
         _month += 1;
-        result = MONTH;
+        result = CLK_MONTH;
       } else if (((_month % 2) == 0) && (_day >= 30)) {       // April, June, August, October, December
         _day = 1;
         _month += 1;
-        result = MONTH;
+        result = CLK_MONTH;
       } else if ((_month == 2) && (_day >= 28)) {              // Feburary
         if ((_year % 4) != 0) {                               // Not a leap year
           _day = 1;
@@ -90,17 +90,17 @@ namespace UserInterface
           _day = 1;
           _month += 1;
         }
-        result = MONTH;
+        result = CLK_MONTH;
       } else {
         _day += 1;
-        result = DAY;
+        result = CLK_DAY;
       } 
     }
   
     if (_month == 12) {
       _month = 0;
       _year += 1;
-      result = YEAR;
+      result = CLK_YEAR;
     }
   
     return result;
@@ -110,23 +110,23 @@ namespace UserInterface
   {
     if (Context::getMode() == CNTX_EDIT) {
       switch (Context::getCursor()) {
-        case MONTH:
-          Context::setCursor(DAY);
+        case CLK_MONTH:
+          Context::setCursor(CLK_DAY);
           break;
-        case DAY:
-          Context::setCursor(YEAR);
+        case CLK_DAY:
+          Context::setCursor(CLK_YEAR);
           break;
-        case YEAR:
-          Context::setCursor(HOUR);
+        case CLK_YEAR:
+          Context::setCursor(CLK_HOUR);
           break;
-        case HOUR:
-          Context::setCursor(MINUTE);
+        case CLK_HOUR:
+          Context::setCursor(CLK_MINUTE);
           break;
-        case MINUTE:
-          Context::setCursor(SECOND);
+        case CLK_MINUTE:
+          Context::setCursor(CLK_SECOND);
           break;
-        case SECOND:
-          Context::setCursor(MONTH);        // Loop back around to the beginning
+        case CLK_SECOND:
+          Context::setCursor(CLK_MONTH);        // Loop back around to the beginning
           break;
         default:
           Serial.println("Clock::shiftRight() : ERROR");
@@ -138,23 +138,23 @@ namespace UserInterface
   {
     if (Context::getMode() == CNTX_EDIT) {
       switch (Context::getCursor()) {
-        case MONTH:                     // Loop around to the end
-          Context::setCursor(SECOND);    
+        case CLK_MONTH:                     // Loop around to the end
+          Context::setCursor(CLK_SECOND);    
           break;
-        case DAY:
-          Context::setCursor(MONTH);
+        case CLK_DAY:
+          Context::setCursor(CLK_MONTH);
           break;
-        case YEAR:
-          Context::setCursor(DAY);
+        case CLK_YEAR:
+          Context::setCursor(CLK_DAY);
           break;
-        case HOUR:
-          Context::setCursor(YEAR);
+        case CLK_HOUR:
+          Context::setCursor(CLK_YEAR);
           break;
-        case MINUTE:
-          Context::setCursor(HOUR);
+        case CLK_MINUTE:
+          Context::setCursor(CLK_HOUR);
           break;
-        case SECOND:
-          Context::setCursor(MINUTE);        
+        case CLK_SECOND:
+          Context::setCursor(CLK_MINUTE);        
           break;
         default:
           Serial.println("Clock::shiftLeft() : ERROR");
@@ -166,30 +166,30 @@ namespace UserInterface
   {
     if (Context::getMode() == CNTX_EDIT) {
       switch(Context::getCursor()) {
-        case MONTH:
+        case CLK_MONTH:
           _month = (_month + 1) % 12;
           printMonth();
-          Context::setCursor(MONTH);
+          Context::setCursor(CLK_MONTH);
           break;
-        case DAY:
+        case CLK_DAY:
           _day = (_day == 31) ? 1 : (_day + 1);         // TODO - addd modulo depending on Month ??
           printDay();
-          Context::setCursor(DAY);
+          Context::setCursor(CLK_DAY);
           break;
-        case YEAR:
+        case CLK_YEAR:
           _year += 1;
           printYear();
-          Context::setCursor(YEAR);
+          Context::setCursor(CLK_YEAR);
           break;
-        case HOUR:
+        case CLK_HOUR:
           _hour = (_hour + 1) % 24;
-          printTimeSegment(HOUR);
-          Context::setCursor(HOUR);
+          printTimeSegment(CLK_HOUR);
+          Context::setCursor(CLK_HOUR);
           break;
-        case MINUTE:
+        case CLK_MINUTE:
           _minute = (_minute + 1) % 60;
-          printTimeSegment(MINUTE);
-          Context::setCursor(MINUTE);
+          printTimeSegment(CLK_MINUTE);
+          Context::setCursor(CLK_MINUTE);
           break;
       }
     }
@@ -199,30 +199,30 @@ namespace UserInterface
   {
       if (Context::getMode() == CNTX_EDIT) {
       switch(Context::getCursor()) {
-        case MONTH:
+        case CLK_MONTH:
           _month = ((_month + 12) - 1) % 12;      // Workaround - Arduino doesn't like negative modulo arithmatic
           printMonth();
-          Context::setCursor(MONTH);
+          Context::setCursor(CLK_MONTH);
           break;
-        case DAY:
+        case CLK_DAY:
           _day = (_day == 1) ? 31 : (_day - 1);         // TODO - addd modulo depending on Month ??
           printDay();
-          Context::setCursor(DAY);
+          Context::setCursor(CLK_DAY);
           break;
-        case YEAR:
+        case CLK_YEAR:
           _year -= 1;
           printYear();
-          Context::setCursor(YEAR);
+          Context::setCursor(CLK_YEAR);
           break;
-        case HOUR:
+        case CLK_HOUR:
           _hour = ((_hour + 24) - 1) % 24;
-          printTimeSegment(HOUR);
-          Context::setCursor(HOUR);
+          printTimeSegment(CLK_HOUR);
+          Context::setCursor(CLK_HOUR);
           break;
-        case MINUTE:
+        case CLK_MINUTE:
           _minute = ((_minute + 60) - 1) % 60;
-          printTimeSegment(MINUTE);
-          Context::setCursor(MINUTE);
+          printTimeSegment(CLK_MINUTE);
+          Context::setCursor(CLK_MINUTE);
           break;
       }
     }
@@ -232,7 +232,7 @@ namespace UserInterface
   {
     if (Context::getMode() == CNTX_DISPLAY) {
       _second = 0;
-      printTimeSegment(SECOND);
+      printTimeSegment(CLK_SECOND);
     } else {
       _offset = 60;         // Signals to updateDateTime() that an offset should be applied
     }
@@ -244,43 +244,43 @@ namespace UserInterface
   {
     switch (_month) {
       case JANUARY:
-        Context::print("Jan\0", MONTH);
+        Context::print("Jan\0", CLK_MONTH);
         break;
       case FEBURARY:
-        Context::print("Feb\0", MONTH);
+        Context::print("Feb\0", CLK_MONTH);
         break;
       case MARCH:
-        Context::print("Mar\0", MONTH);
+        Context::print("Mar\0", CLK_MONTH);
         break;
       case APRIL:
-        Context::print("Apr\0", MONTH);
+        Context::print("Apr\0", CLK_MONTH);
         break;
       case MAY:
-        Context::print("May\0", MONTH);
+        Context::print("May\0", CLK_MONTH);
         break;
       case JUNE:
-        Context::print("Jun\0", MONTH);
+        Context::print("Jun\0", CLK_MONTH);
         break;
       case JULY:
-        Context::print("Jul\0", MONTH);
+        Context::print("Jul\0", CLK_MONTH);
         break;
       case AUGUST:
-        Context::print("Aug\0", MONTH);
+        Context::print("Aug\0", CLK_MONTH);
         break;
       case SEPTEMBER:
-        Context::print("Sep\0", MONTH);
+        Context::print("Sep\0", CLK_MONTH);
         break;
       case OCTOBER:
-        Context::print("Oct\0", MONTH);
+        Context::print("Oct\0", CLK_MONTH);
         break;
       case NOVEMBER:
-        Context::print("Nov\0", MONTH);
+        Context::print("Nov\0", CLK_MONTH);
         break;
       case DECEMBER:
-        Context::print("Dec\0", MONTH);
+        Context::print("Dec\0", CLK_MONTH);
         break;
       default:
-        Context::print("ERR\0", MONTH);
+        Context::print("ERR\0", CLK_MONTH);
     }
   }
   
@@ -294,7 +294,7 @@ namespace UserInterface
     output[0] = (char)(high | 0x30); 
     output[1] = (char)(low | 0x30);
   
-    Context::print(output, DAY);
+    Context::print(output, CLK_DAY);
   }
   
   void Clock::printYear(void)
@@ -313,7 +313,7 @@ namespace UserInterface
     output[2] = (char)(high | 0x30);
     output[3] = (char)(low | 0x30);
   
-    Context::print(output, YEAR);
+    Context::print(output, CLK_YEAR);
   }
   
   void Clock::printTimeSegment(uint8_t segment)
@@ -322,11 +322,11 @@ namespace UserInterface
     char output[3] = "XX\0";
   
     switch (segment) {
-      case HOUR:
+      case CLK_HOUR:
         high = _hour / 10;
         low = _hour % 10;
         break;
-      case MINUTE:
+      case CLK_MINUTE:
         high = _minute / 10;
         low = _minute % 10;
         break;
