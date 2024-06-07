@@ -14,7 +14,7 @@
 
 #include "Context.h"
 #include "Menu.h"
-#include "Calendar.h"
+#include "Clock.h"
 #include "TempHumid.h"
 
 //#define BUTTON    11        // Pin to read for button click
@@ -29,7 +29,7 @@ JoyStick ctrl(A0,A1,2);
 
 // Initialize user interface classes
 Menu menu(&lcd);
-Calendar clk(&lcd);
+Clock clk(&lcd);
 TempHumid env(&lcd, 10);
 Context *view = &clk;     // Default behavior is to startup with clock visible
 
