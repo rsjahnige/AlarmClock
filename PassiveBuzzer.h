@@ -7,6 +7,7 @@ namespace Buzzer
 {
   struct Melody 
   { 
+    char* name;
     unsigned int *pitch;
     unsigned int *rhythm;
     double tempo;     

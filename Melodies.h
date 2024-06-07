@@ -2,9 +2,10 @@
 #define MELODIES_H
 
 #include "PassiveBuzzer.h"
-using Buzzer::Melody;
+using Buzzer::Melody; 
 
 Melody DEFAULT = {
+  "1.Default\0",
   {NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, REST, NOTE_B3, NOTE_C4},
   {4, 8, 8, 4, 4, 4, 4, 4},
   60,
@@ -12,6 +13,7 @@ Melody DEFAULT = {
 };
 
 Melody ALLEGRO = {
+  "2.Allegro\0",
   {NOTE_C4, NOTE_C4, NOTE_G3, NOTE_G3, NOTE_G3, REST, NOTE_GS3, NOTE_GS3, NOTE_GS3, REST,
     NOTE_F4, NOTE_F4, NOTE_F4, NOTE_D4, NOTE_D4, NOTE_G4, NOTE_G4, NOTE_F4, NOTE_DS4, 
     NOTE_D4, NOTE_G4, NOTE_G4, NOTE_DS4},
