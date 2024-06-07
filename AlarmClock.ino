@@ -105,6 +105,6 @@ void loop() {
   }
 
   // Make sure the clock stays up to date even when not visible
-  if ((view -> type()) != CALENDAR)
+  if ((view -> type()) != CLOCK)
     clk.updateDateTime();
 }
