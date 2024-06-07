@@ -29,9 +29,11 @@ JoyStick ctrl(A0,A1,2);
 
 // Initialize user interface classes
 Menu menu(&lcd);
+Menu alarmMenu(&lcd);
 Clock clk(&lcd);
 TempHumid env(&lcd, 10);
-Context *view = &clk;     // Default behavior is to startup with clock visible
+
+Context *view = &clk;     // Currently visible context; default is to startup with clock visible
 
 // Function used to switch between LCD display screens
 void changeView(Context* newView) {
@@ -42,8 +44,15 @@ void changeView(Context* newView) {
 // Initialize main menu
 Menu::Item clock = {"1.Calendar\0", &clk, changeView};
 Menu::Item envir = {"2.Temp&Humidity\0", &env, changeView};
-Menu::Item alarm = {"3.Set Alarm\0", nullptr, nullptr};
-Node<Menu::Item> *head;
+Menu::Item alarm = {"3.Set Alarm\0", &alarmMenu, changeView};
+Node<Menu::Item> *mainHead;
+
+// Intialize alarm list 
+Menu::Item back = {"<Back\0", &menu, changeView};
+Menu::Item addAlarm = {"+Alarm\0", nullptr, nullptr};
+Node<Menu::Item> *alarmHead;
+
+
 
 void setup() {
   Serial.begin(250000);
@@ -56,10 +65,15 @@ void setup() {
   view -> display();          
 
   // Build Main Menu
-  head = new Node<Menu::Item>(clock);
-  LinkedList::insertNode(head, envir);
-  LinkedList::insertNode(head->getNextLink(), alarm);
-  menu.setNode(head);
+  mainHead = new Node<Menu::Item>(clock);
+  LinkedList::insertNode(mainHead, envir);
+  LinkedList::insertNode(mainHead->getNextLink(), alarm);
+  menu.setNode(mainHead);
+
+  // Build Alarm Menu
+  alarmHead = new Node<Menu::Item>(back);
+  LinkedList::insertNode(alarmHead, addAlarm);
+  alarmMenu.setNode(alarmHead);
 
   //pinMode(BUTTON, INPUT_PULLUP);
 }
