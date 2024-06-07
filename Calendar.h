@@ -31,6 +31,7 @@
 #define SECOND    0x46
 
 using LCD1602A::LiquidCrystal;
+using namespace UserInterface;
 
 class Calendar : public Context
 {

@@ -6,6 +6,7 @@
 #include "ThermoHygro.h"
 
 using namespace DHT11;
+using namespace UserInterface;
 
 #define TEMPHUMID 0x32      // Type identifier - needs to match Menu list index 
 
