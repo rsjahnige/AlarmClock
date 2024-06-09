@@ -64,13 +64,13 @@ void setup() {
 
   // Build Main Menu
   mainHead = new Node<Menu::Item>(clock);
-  LinkedList::insertNode(mainHead, envir);
-  LinkedList::insertNode(mainHead->getNextLink(), alarm);
+  LinkedList::insertAfter(mainHead, envir);
+  LinkedList::insertAfter(mainHead->getNextLink(), alarm);
   menu.setNode(mainHead);
 
   // Build Alarm Menu
   alarmHead = new Node<Menu::Item>(back);
-  LinkedList::insertNode(alarmHead, addAlarm);
+  LinkedList::insertAfter(alarmHead, addAlarm);
   alarmMenu.setNode(alarmHead);
 
   //pinMode(BUTTON, INPUT_PULLUP);

@@ -4,7 +4,7 @@ namespace DHT11
 {
   // Note that range(int8_t) = [-128,127]. Thus, the max size of the 
   // resulting string is 4 characters (including negative sign)
-  uint8_t itos(int8_t num, uint8_t size, char *result) 
+  uint8_t itos(int8_t num, uint8_t size, char* output) 
   {
     uint8_t index = 0;
     char converse_str[4] = {'\0'}; 
@@ -26,8 +26,10 @@ namespace DHT11
       index += 1;
     }
 
-    for (int i=0; i < index; i++)
-      result[i] = converse_str[index - (i+1)];
+    for (int i=0; i < index; i++) {
+      if (i < size) output[i] = converse_str[index - (i+1)];
+      else break;
+    }
 
     return index;
   }

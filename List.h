@@ -25,21 +25,35 @@ namespace LinkedList
   };
 
   template<class T>
-  void insertNode(Node<T>* afterMe, const T& data)
+  void insertAfter(Node<T>* afterMe, const T& data)
   {
     Node<T> *replace = afterMe -> getNextLink();
     Node<T> *newNode = new Node<T>(data, replace, afterMe);
 
     afterMe -> setNextLink(newNode);
-    replace -> setPrevLink(newNode); 
+    if (replace != nullptr) replace -> setPrevLink(newNode); 
+  }
+
+  template<class T>
+  void insertBefore(Node<T>* beforeMe, const T& data)
+  {
+    Node<T> *replace = beforeMe -> getPrevLink();
+    Node<T> *newNode = new Node<T>(data, beforeMe, replace);
+
+    beforeMe -> setPrevLink(newNode);
+    if (replace != nullptr) replace -> setNextLink(newNode);
   }
 
   // This function is currently untested !!!!
   template<class T>
   void deleteNode(Node<T>* node) 
   {
-    (node -> getPrevLink()) -> setNextLink(node -> getNextLink());
-    (node -> getNextLink()) -> setPrevLink(node -> getPrevLink());
+    Node<T> *prev = node -> getPrevLink();
+    Node<T> *next = node -> getNextLink();
+
+    if (prev != nullptr) prev -> setNextLink(next);
+    if (next != nullptr) next -> setPrevLink(prev);
+
     delete node;
   }
 };
