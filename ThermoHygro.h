@@ -11,7 +11,7 @@ namespace DHT11
   // Converts 'num' to character string equivalent; Writes a maximum of 'size' 
   // characters to the input array 'result' and returns the number of characters 
   // written. Intended for internal use of RealNum but could be useful in isolation 
-  uint8_t itos(int8_t num, uint8_t size, char *result);
+  uint8_t itos(int8_t num, uint8_t size, char* output);
 
   class RealNum 
   {
