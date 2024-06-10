@@ -25,7 +25,9 @@ namespace UserInterface
   
     void display(void) override;
     uint8_t type(void) override { return MENU; }
-    void setNode(Node<Item>* node) { _curr_node = node; }
+
+    Node<Item>* getNode(void)       { return _curr_node; }
+    void setNode(Node<Item>* node)  { _curr_node = node; }
   
     void shiftLeft(void) override { return; }
     void shiftRight(void) override { return; }

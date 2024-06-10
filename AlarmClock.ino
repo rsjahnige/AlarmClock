@@ -9,6 +9,7 @@
 
 #include "LiquidCrystal.h"
 #include "JoyStick.h"
+#include "PassiveBuzzer.h"
 
 #include "List.h"
 
@@ -22,6 +23,7 @@
 
 using LCD1602A::LiquidCrystal;
 using LinkedList::Node;
+using Buzzer::Melody;
 
 using namespace UserInterface;
 
@@ -51,7 +53,23 @@ void newAlarm(Context* alarm) {
   alarm = new Alarm(&lcd);
   Menu::Item temp = {nullptr, alarm, changeView};
   LinkedList::insertAfter(alarmHead, temp);
+  alarmMenu.setNode(alarmHead -> getNextLink());
   changeView(alarm);
+}
+
+void alarmString(Alarm* alrm, char output[9]) {
+    char *temp = new char[9];
+    (alrm -> getTime()) -> toString(temp);
+
+    output[0] = '>';
+    output[1] = ((alrm -> getMelody()) -> name)[0];   // First character of Melody.name
+    output[2] = '-';
+   
+    for (int i=0; i < 5; i++)
+      output[3+i] = temp[i];
+
+    output[8] = '\0';
+    delete [] temp;
 }
 
 // Initialize main menu
@@ -131,13 +149,14 @@ void loop() {
   if (((view -> type()) == ALARM) && 
       ((view -> getMode()) == CNTX_INPUT)) {
     if (usr_option == ALRM_SAVE) {
-      Menu::Item alarm = (alarmHead->getNextLink()) -> getData();
-      alarm.string = ">TempString\0";
-      (alarmHead->getNextLink()) -> setData(alarm);
+      Menu::Item alarm = alarmMenu.getNode() -> getData();
+      if (alarm.string == nullptr) alarm.string = new char[9];     
+      alarmString(alarm.cntx, alarm.string);
+      alarmMenu.getNode() -> setData(alarm);
       alarmMenu.setNode(alarmHead);
       changeView(&alarmMenu);
     } else if (usr_option == ALRM_DELETE) {
-      LinkedList::deleteNode(alarmHead->getNextLink()); 
+      LinkedList::deleteNode(alarmMenu.getNode()); 
       alarmMenu.setNode(alarmHead);
       changeView(&alarmMenu);
     }

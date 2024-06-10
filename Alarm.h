@@ -25,6 +25,9 @@ namespace UserInterface
   public:
     Alarm(const LiquidCrystal* lcd);
 
+    const Time* getTime() const     { return _time; }
+    const Melody* getMelody() const { return _melody; }
+
     void display(void) override;
     void refresh(void) override { return; }
     uint8_t type(void) override { return ALARM; }

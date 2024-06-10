@@ -17,7 +17,6 @@ namespace UserInterface
     if (nextNode != nullptr) {
       item = nextNode -> getData();
       Context::print(item.string, LCD_LINE2);
-      Serial.println(item.string);
     } 
 
     Context::setCursor(LCD_LINE1);
