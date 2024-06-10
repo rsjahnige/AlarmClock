@@ -9,18 +9,22 @@
 
 #include "LiquidCrystal.h"
 #include "JoyStick.h"
+#include "PassiveBuzzer.h"
 
 #include "List.h"
 
 #include "Context.h"
 #include "Menu.h"
 #include "Clock.h"
+#include "Alarm.h"
 #include "TempHumid.h"
 
 //#define BUTTON    11        // Pin to read for button click
 
 using LCD1602A::LiquidCrystal;
 using LinkedList::Node;
+using Buzzer::Melody;
+
 using namespace UserInterface;
 
 // Initialize hardware classes
@@ -33,7 +37,11 @@ Menu alarmMenu(&lcd);
 Clock clk(&lcd);
 TempHumid env(&lcd, 10);
 
-Context *view = &clk;     // Currently visible context; default is to startup with clock visible
+Context *view = &clk;     // Currently visible context; default is to start up with clock visible
+
+// Pointer to the begining of each linked list
+Node<Menu::Item> *mainHead;
+Node<Menu::Item> *alarmHead;
 
 // Function used to switch between LCD display screens
 void changeView(Context* newView) {
@@ -41,16 +49,37 @@ void changeView(Context* newView) {
   view -> changeContext();
 }
 
+void newAlarm(Context* alarm) {
+  alarm = new Alarm(&lcd);
+  Menu::Item temp = {nullptr, alarm, changeView};
+  LinkedList::insertAfter(alarmHead, temp);
+  alarmMenu.setNode(alarmHead -> getNextLink());
+  changeView(alarm);
+}
+
+void alarmString(Alarm* alrm, char output[9]) {
+    char *temp = new char[9];
+    (alrm -> getTime()) -> toString(temp);
+
+    output[0] = '>';
+    output[1] = ((alrm -> getMelody()) -> name)[0];   // First character of Melody.name
+    output[2] = '-';
+   
+    for (int i=0; i < 5; i++)
+      output[3+i] = temp[i];
+
+    output[8] = '\0';
+    delete [] temp;
+}
+
 // Initialize main menu
 Menu::Item clock = {"1.Calendar\0", &clk, changeView};
 Menu::Item envir = {"2.Temp&Humidity\0", &env, changeView};
 Menu::Item alarm = {"3.Set Alarm\0", &alarmMenu, changeView};
-Node<Menu::Item> *mainHead;
 
 // Intialize alarm list 
 Menu::Item back = {"<Back\0", &menu, changeView};
-Menu::Item addAlarm = {"+Alarm\0", nullptr, nullptr};
-Node<Menu::Item> *alarmHead;
+Menu::Item addAlarm = {"+Alarm\0", nullptr, newAlarm};
 
 void setup() {
   Serial.begin(250000);
@@ -78,6 +107,7 @@ void setup() {
 
 void loop() {
   uint8_t usr_action = 0;
+  int8_t usr_option = 0;  
 
   /*
   unsigned long timer = millis() + 250;
@@ -95,10 +125,10 @@ void loop() {
       view -> buttonHold();
       break;
     case JS_PRESS:
-      if ((view -> getMode()) == CNTX_DISPLAY)
+      if ((view -> getMode()) == CNTX_DISPLAY) 
         changeView(&menu);
-      else 
-        view -> buttonPress();
+      else
+        usr_option = view -> buttonPress();
       break;
     case JS_LEFT:
       view -> shiftLeft();
@@ -114,6 +144,22 @@ void loop() {
       break;
     default:
       view -> refresh();                 
+  }
+
+  if (((view -> type()) == ALARM) && 
+      ((view -> getMode()) == CNTX_INPUT)) {
+    if (usr_option == ALRM_SAVE) {
+      Menu::Item alarm = alarmMenu.getNode() -> getData();
+      if (alarm.string == nullptr) alarm.string = new char[9];     
+      alarmString(alarm.cntx, alarm.string);
+      alarmMenu.getNode() -> setData(alarm);
+      alarmMenu.setNode(alarmHead);
+      changeView(&alarmMenu);
+    } else if (usr_option == ALRM_DELETE) {
+      LinkedList::deleteNode(alarmMenu.getNode()); 
+      alarmMenu.setNode(alarmHead);
+      changeView(&alarmMenu);
+    }
   }
 
   // Make sure the clock stays up to date even when not visible

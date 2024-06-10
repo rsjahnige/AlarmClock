@@ -31,13 +31,17 @@ namespace UserInterface
   
   void Context::changeContext(void)
   {
+    clearDisplay(); 
+    setContext();
+    this -> display();
+  }
+
+  void Context::clearDisplay(void) 
+  {
     while(_lcd -> isBusy());
     _lcd -> clearDisplay();
     while(_lcd -> isBusy());
     _csr_position = _lcd -> getAddrCntr();
-  
-    setContext();
-    this -> display();
   }
   
   // TODO - add a check for when the display needs to shift
@@ -74,9 +78,9 @@ namespace UserInterface
     }
   }
   
-  void Context::buttonPress(void) 
+  int8_t Context::buttonPress(void) 
   {
-    return; 
+    return _csr_position; 
   }
   
   void Context::buttonHold(void)

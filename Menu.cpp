@@ -17,7 +17,6 @@ namespace UserInterface
     if (nextNode != nullptr) {
       item = nextNode -> getData();
       Context::print(item.string, LCD_LINE2);
-      Serial.println(item.string);
     } 
 
     Context::setCursor(LCD_LINE1);
@@ -51,9 +50,10 @@ namespace UserInterface
     }
   }
 
-  void Menu::buttonPress(void) 
+  int8_t Menu::buttonPress(void) 
   {
     Item userData = _curr_node -> getData();
     userData.action(userData.cntx);
+    return -1;
   }
 }

@@ -92,7 +92,7 @@ namespace UserInterface
     void shiftLeft(void) override;
     void shiftUp(void) override;
     void shiftDown(void) override;
-    void buttonPress(void) override;
+    int8_t buttonPress(void) override;
     void buttonHold(void) override;
   
     uint8_t updateDateTime(void);

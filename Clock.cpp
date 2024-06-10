@@ -248,10 +248,12 @@ namespace UserInterface
     }
   }
 
-  void Clock::buttonPress(void)
+  int8_t Clock::buttonPress(void)
   {
-    if (Context::getMode() == CNTX_EDIT)      // TODO - this logic is redundent; how can we improve?
+    if (Context::getMode() == CNTX_EDIT)
       Clock::buttonHold();
+
+    return -1;
   }
 
   void Clock::buttonHold(void) 
