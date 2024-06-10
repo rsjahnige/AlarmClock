@@ -51,9 +51,10 @@ namespace UserInterface
     }
   }
 
-  void Menu::buttonPress(void) 
+  int8_t Menu::buttonPress(void) 
   {
     Item userData = _curr_node -> getData();
     userData.action(userData.cntx);
+    return -1;
   }
 }

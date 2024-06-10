@@ -4,6 +4,7 @@
 #include <Arduino.h>
 
 #include "Context.h"
+#include "ThermoHygro.h"      // itos()
 #include "LiquidCrystal.h"
 
 #define CLOCK 0x31      // Type identifier - needs to match Menu.h character index
@@ -17,6 +18,7 @@
 #define CLK_SECOND    0x46
 
 using LCD1602A::LiquidCrystal;
+using DHT11::itos;
 
 namespace UserInterface 
 {
@@ -69,6 +71,10 @@ namespace UserInterface
     void decrementHour(void)        { _hour = (_hour + 23) % 24; }
     void decrementMinute(void)      { _minute = (_minute + 59) % 60; }
 
+    // !!! WARNING - compiler does not catch calls to this  !!! 
+    // !!! function with invaid input array sizes           !!!
+    void toString(char output[9]);
+
   private:
     uint8_t _hour, _minute, _second;
   };
@@ -86,7 +92,7 @@ namespace UserInterface
     void shiftLeft(void) override;
     void shiftUp(void) override;
     void shiftDown(void) override;
-    void buttonPress(void) override;
+    int8_t buttonPress(void) override;
     void buttonHold(void) override;
   
     uint8_t updateDateTime(void);

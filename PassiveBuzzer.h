@@ -5,11 +5,12 @@
 
 namespace Buzzer
 {
-  struct Melody 
+  typedef struct Melody 
   { 
+    uint8_t id;
     char* name;
-    unsigned int *pitch;
-    unsigned int *rhythm;
+    unsigned int* pitch;
+    unsigned int* rhythm;
     double tempo;     
     uint8_t length;         // length of pitch & rhythm arrays; must be equal
   };

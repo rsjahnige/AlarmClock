@@ -21,17 +21,48 @@ namespace UserInterface
     return result;
   }
 
+  void Time::toString(char output[9])
+  {
+    uint8_t length;
+    
+    output[2] = ':';
+    output[5] = ':';
+    output[8] = '\0';
+
+    length = itos(_hour, 2, output); 
+    if (length < 2) {
+      output[1] = output[0];
+      output[0] = '0';
+    }
+
+    length = itos(_minute, 2, output+3);
+    if (length < 2) {
+      output[4] = output[3];
+      output[3] = '0';
+    }
+
+    length = itos(_second, 2, output+6);
+    if (length < 2) {
+      output[7] = output[6];
+      output[6] = '0'; 
+    }
+  }
+
   void Clock::display(void)
   {
-    Context::print("XXX XX XXXX\0", LCD_LINE1);
-    Context::print("XX:XX:XX\0", LCD_LINE2);
-  
+    char *dspString = new char[9];
+
+    // Print date format first
+    Context::print("XXX XX XXXX\0", LCD_LINE1); 
+
     printMonth();
     printDay();
     printYear();
-    printTimeSegment(CLK_HOUR);
-    printTimeSegment(CLK_MINUTE);
-    printTimeSegment(CLK_SECOND);
+
+    _time.toString(dspString);
+    Context::print(dspString, LCD_LINE2);
+    delete [] dspString;
+
   }
   
   void Clock::refresh(void) 
@@ -217,10 +248,12 @@ namespace UserInterface
     }
   }
 
-  void Clock::buttonPress(void)
+  int8_t Clock::buttonPress(void)
   {
-    if (Context::getMode() == CNTX_EDIT)      // TODO - this logic is redundent; how can we improve?
+    if (Context::getMode() == CNTX_EDIT)
       Clock::buttonHold();
+
+    return -1;
   }
 
   void Clock::buttonHold(void) 
@@ -285,22 +318,26 @@ namespace UserInterface
   
   void Clock::printDay(void)
   {
-    unsigned int high, low;
-    char output[3] = "XX\0";
+    uint8_t length;
+    char *output = new char[3];
   
-    high = _date.getDay() / 10;
-    low = _date.getDay() % 10;
+    length = itos(_date.getDay(), 2, output);
+    if (length < 2) { 
+      output[1] = output[0]; 
+      output[0] = '0';
+    }
+    output[2] = '\0';
 
-    output[0] = (char)(high | 0x30); 
-    output[1] = (char)(low | 0x30);
-  
     Context::print(output, CLK_DAY);
+    delete [] output;
   }
   
+  // Note that DHT11::itos() cannot be used here since _year is
+  // an 'unsigned int'
   void Clock::printYear(void)
   {
-    unsigned int high, low;
-    char output[5] = "XXXX\0";
+    uint8_t high, low;
+    char *output = new char[5];
   
     high = _date.getYear() / 1000;
     low = _date.getYear() % 1000;
@@ -314,32 +351,35 @@ namespace UserInterface
     low = low % 10;
     output[2] = (char)(high | 0x30);
     output[3] = (char)(low | 0x30);
-  
+
+    output[4] = '\0';  
     Context::print(output, CLK_YEAR);
+    delete [] output;
   }
   
   void Clock::printTimeSegment(uint8_t segment)
   {
-    uint8_t high, low;                  // High and low base 10 integer digits
-    char output[3] = "XX\0";
+    uint8_t length;
+    char *output = new char[3];
   
     switch (segment) {
       case CLK_HOUR:
-        high = _time.getHour() / 10;
-        low = _time.getHour() % 10;
+        length = itos(_time.getHour(), 2, output);
         break;
       case CLK_MINUTE:
-        high = _time.getMinute() / 10;
-        low = _time.getMinute() % 10;
+        length = itos(_time.getMinute(), 2, output);
         break;
       default:
-        high = _time.getSecond() / 10;
-        low = _time.getSecond() % 10;
+        length = itos(_time.getSecond(), 2, output);
     }
     
-    output[0] = (char)(high | 0x30);
-    output[1] = (char)(low | 0x30);
-  
+    if (length < 2) {
+      output[1] = output[0];
+      output[0] = '0';
+    }
+    output[2] = '\0';
+
     Context::print(output, segment);
+    delete [] output;
   }
 };

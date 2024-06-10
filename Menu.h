@@ -32,7 +32,7 @@ namespace UserInterface
   
     void shiftDown(void) override;
     void shiftUp(void) override;
-    void buttonPress(void) override;
+    int8_t buttonPress(void) override;
 
   private:
     Node<Item> *_curr_node;

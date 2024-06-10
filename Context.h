@@ -25,12 +25,13 @@ namespace UserInterface
   
     virtual void setContext(void) final;
     virtual void changeContext(void) final;
+    virtual void clearDisplay(void) final;
   
     virtual void shiftRight(void);
     virtual void shiftLeft(void);
     virtual void shiftDown(void);
     virtual void shiftUp(void);
-    virtual void buttonPress(void);
+    virtual int8_t buttonPress(void);
     virtual void buttonHold(void);
   
     // These functions should be overridden in each derived class     
