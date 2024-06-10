@@ -49,6 +49,7 @@ void changeView(Context* newView) {
   view -> changeContext();
 }
 
+// Function called when the user selects '+Alarm'
 void newAlarm(Context* alarm) {
   alarm = new Alarm(&lcd);
   Menu::Item temp = {nullptr, alarm, changeView};
@@ -57,6 +58,7 @@ void newAlarm(Context* alarm) {
   changeView(alarm);
 }
 
+// Converts Alarm object to string for display within the alarmMenu object
 void alarmString(Alarm* alrm, char output[9]) {
     char *temp = new char[9];
     (alrm -> getTime()) -> toString(temp);
@@ -146,12 +148,13 @@ void loop() {
       view -> refresh();                 
   }
 
-  if (((view -> type()) == ALARM) && 
-      ((view -> getMode()) == CNTX_INPUT)) {
+  // Add or remove an alarm from the linked list starting with alarmHead
+  // based on user input then switch back to alarmMenu context 
+  if (((view -> type()) == ALARM) && ((view -> getMode()) == CNTX_INPUT)) {
     if (usr_option == ALRM_SAVE) {
       Menu::Item alarm = alarmMenu.getNode() -> getData();
       if (alarm.string == nullptr) alarm.string = new char[9];     
-      alarmString(alarm.cntx, alarm.string);
+      alarmString(alarm.cntx, alarm.string);          
       alarmMenu.getNode() -> setData(alarm);
       alarmMenu.setNode(alarmHead);
       changeView(&alarmMenu);
