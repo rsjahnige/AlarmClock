@@ -71,8 +71,6 @@ namespace UserInterface
     void decrementHour(void)        { _hour = (_hour + 23) % 24; }
     void decrementMinute(void)      { _minute = (_minute + 59) % 60; }
 
-    // !!! WARNING - compiler does not catch calls to this  !!! 
-    // !!! function with invaid input array sizes           !!!
     void toString(char output[9]);
 
   private:
