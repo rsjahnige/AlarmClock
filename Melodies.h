@@ -4,11 +4,12 @@
 #include "PassiveBuzzer.h"
 using Buzzer::Melody; 
 
-namespace Melodies 
+namespace Database 
 {
   extern const Melody Default;
   extern const Melody Allegro;
 
+  // Used to loop through all pre-defined melodies
   const Melody* getNextMelody(const Melody* current);
 };
 

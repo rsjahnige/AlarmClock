@@ -5,7 +5,7 @@ namespace UserInterface
   Alarm::Alarm(const LiquidCrystal* lcd) : Context(lcd, CNTX_EDIT)
   {
     _time = new Time(12);
-    _melody = &Melodies::Default;
+    _melody = &Database::Default;
   }
 
   void Alarm::display(void) 
@@ -83,7 +83,7 @@ namespace UserInterface
       _time -> decrementMinute();
       break;
     default:
-      _melody = Melodies::getNextMelody(_melody);
+      _melody = Database::getNextMelody(_melody);
     }
 
     if (Context::getCursor() < LCD_LINE2) {
@@ -121,7 +121,7 @@ namespace UserInterface
       _time -> incrementMinute();
       break;
     default:
-      _melody = Melodies::getNextMelody(_melody);
+      _melody = Database::getNextMelody(_melody);
     }
 
     if (Context::getCursor() < LCD_LINE2) {

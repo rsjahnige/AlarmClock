@@ -1,9 +1,8 @@
 #include "Melodies.h"
 
-namespace Melodies 
+namespace Database 
 {
   const Melody Default = {
-    0, 
     "Default\0",
     //{NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, REST, NOTE_B3, NOTE_C4},
     nullptr,
@@ -14,7 +13,6 @@ namespace Melodies
   };
   
   const Melody Allegro = {
-    1,
     "Allegro\0",
     //{NOTE_C4, NOTE_C4, NOTE_G3, NOTE_G3, NOTE_G3, REST, NOTE_GS3, NOTE_GS3, NOTE_GS3, REST,
     //  NOTE_F4, NOTE_F4, NOTE_F4, NOTE_D4, NOTE_D4, NOTE_G4, NOTE_G4, NOTE_F4, NOTE_DS4, 
@@ -28,11 +26,7 @@ namespace Melodies
 
   const Melody* getNextMelody(const Melody* current) 
   {
-    switch (current->id) {
-    case 0: 
-      return &Allegro;
-    default:
-      return &Default;
-    }
+    if ((current->name) == Default.name) return &Allegro;
+    else return &Default;
   }
 }

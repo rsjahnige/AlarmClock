@@ -7,7 +7,6 @@ namespace Buzzer
 {
   typedef struct Melody 
   { 
-    uint8_t id;
     char* name;
     unsigned int* pitch;
     unsigned int* rhythm;
