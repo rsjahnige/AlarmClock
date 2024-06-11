@@ -4,24 +4,22 @@ namespace Database
 {
   const Melody Default = {
     "Default\0",
+    8,
     //{NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, REST, NOTE_B3, NOTE_C4},
     nullptr,
-    //{4, 8, 8, 4, 4, 4, 4, 4},
-    nullptr,
-    60,
-    8
+    new uint8_t[8]{4, 8, 8, 4, 4, 4, 4, 4},
+    60
   };
   
   const Melody Allegro = {
     "Allegro\0",
+    23,
     //{NOTE_C4, NOTE_C4, NOTE_G3, NOTE_G3, NOTE_G3, REST, NOTE_GS3, NOTE_GS3, NOTE_GS3, REST,
     //  NOTE_F4, NOTE_F4, NOTE_F4, NOTE_D4, NOTE_D4, NOTE_G4, NOTE_G4, NOTE_F4, NOTE_DS4, 
     //  NOTE_D4, NOTE_G4, NOTE_G4, NOTE_DS4},
     nullptr,
-    // {1,4,3,3,3,4,3,3,3,4,3,3,3,1,4,4,4,3,1,4,4,4,1},
-    nullptr,
-    50,
-    23
+    new uint8_t[23]{1,4,3,3,3,4,3,3,3,4,3,3,3,1,4,4,4,3,1,4,4,4,1},
+    50
   };
 
   const Melody* getNextMelody(const Melody* current) 

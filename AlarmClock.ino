@@ -23,7 +23,6 @@
 
 using LCD1602A::LiquidCrystal;
 using LinkedList::Node;
-using Buzzer::Melody;
 
 using namespace UserInterface;
 

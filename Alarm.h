@@ -16,7 +16,7 @@
 #define ALRM_SAVE     0x01
 #define ALRM_DELETE   0x02
 
-using Buzzer::Melody;
+using Database::Melody;
 
 namespace UserInterface 
 {

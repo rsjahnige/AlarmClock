@@ -14,14 +14,15 @@ namespace Buzzer
     noTone(_pin);
   }
 
-  void PassiveBuzzer::playMelody(struct Melody tune)
+  void PassiveBuzzer::playMelody(uint8_t length, unsigned int* pitch,
+                                  uint8_t* rhythm, double tempo)
   {
-    double time = 1000 + (1-((tune.tempo*1000)/60000))*1000;
     unsigned int duration;
+    double time = 1000 + (1-((tempo*1000)/60000))*1000;
 
-    for (int i=0; i < tune.length; i++) {
-      duration = time / tune.rhythm[i];
-      playTone(tune.pitch[i], duration);
+    for (int i=0; i < length; i++) {
+      duration = time / rhythm[i];
+      playTone(pitch[i], duration);
     }
   }
 }

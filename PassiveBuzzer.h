@@ -3,28 +3,19 @@
 
 #include <Arduino.h>
 
-namespace Buzzer
+class PassiveBuzzer 
 {
-  typedef struct Melody 
-  { 
-    char* name;
-    unsigned int* pitch;
-    unsigned int* rhythm;
-    double tempo;     
-    uint8_t length;         // length of pitch & rhythm arrays; must be equal
-  };
+public:
+  PassiveBuzzer(uint8_t pin);
 
-  class PassiveBuzzer 
-  {
-  public:
-    PassiveBuzzer(uint8_t pin);
+  // converts Arduino::tone() to a blocking function
+  void playTone(unsigned int frequency, unsigned int duration);
 
-    void playTone(unsigned int frequency, unsigned int duration);     // converts Arduino::tone() to a blocking function 
-    void playMelody(struct Melody tune);   
+  void playMelody(uint8_t length, unsigned int* pitch, 
+                  uint8_t* rhythm, double tempo);   
 
-  private:
-    uint8_t _pin;
-  };
+private:
+  uint8_t _pin;
 };
 
 #endif
