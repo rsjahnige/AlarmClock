@@ -4,7 +4,6 @@ namespace UserInterface
 {
   Alarm::Alarm(const LiquidCrystal* lcd) : Context(lcd, CNTX_EDIT)
   {
-    _time = new Time(12);
     _melody = &Database::Default;
   }
 
@@ -15,7 +14,7 @@ namespace UserInterface
     if (Context::getMode() != CNTX_EDIT) 
       Context::setMode(CNTX_EDIT);
 
-    _time -> toString(timeStr);
+    _time.toString(timeStr);
     Context::print("Time: \0", LCD_LINE1);
     Context::print(timeStr, LCD_LINE1+6);
 
@@ -77,17 +76,17 @@ namespace UserInterface
       
     switch (cursorPos) {
     case ALRM_HOUR:
-      _time -> decrementHour();
+      _time.decrementHour();
       break;
     case ALRM_MINUTE:
-      _time -> decrementMinute();
+      _time.decrementMinute();
       break;
     default:
       _melody = Database::getNextMelody(_melody);
     }
 
     if (Context::getCursor() < LCD_LINE2) {
-      _time -> toString(str);
+      _time.toString(str);
       Context::print(str, ALRM_HOUR);
     } else 
       Context::print(_melody->name, ALRM_MELODY);
@@ -115,17 +114,17 @@ namespace UserInterface
       
     switch (cursorPos) {
     case ALRM_HOUR:
-      _time -> incrementHour();
+      _time.incrementHour();
       break;
     case ALRM_MINUTE:
-      _time -> incrementMinute();
+      _time.incrementMinute();
       break;
     default:
       _melody = Database::getNextMelody(_melody);
     }
 
     if (Context::getCursor() < LCD_LINE2) {
-      _time -> toString(str);
+      _time.toString(str);
       Context::print(str, ALRM_HOUR);
     } else 
       Context::print(_melody->name, ALRM_MELODY);

@@ -57,6 +57,8 @@ namespace UserInterface
     Time(uint8_t hour=0, uint8_t minute=0, uint8_t second=0) :
           _hour(hour), _minute(minute), _second(second) {}
 
+    bool operator ==(const Time& right);
+
     uint8_t getHour(void) const     { return _hour; }
     uint8_t getMinute(void) const   { return _minute; }
     uint8_t getSecond(void) const   { return _second; }
@@ -81,6 +83,9 @@ namespace UserInterface
   {
   public:
     Clock(const LiquidCrystal *lcd) : Context(lcd, CNTX_DISPLAY) {}
+
+    Time getTime(void) const  { return _time; }
+    Date getDate(void) const  { return _date; }
   
     void display(void) override;
     void refresh(void) override;

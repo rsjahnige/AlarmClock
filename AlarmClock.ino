@@ -12,6 +12,7 @@
 #include "PassiveBuzzer.h"
 
 #include "List.h"
+#include "Melodies.h"
 
 #include "Context.h"
 #include "Menu.h"
@@ -19,15 +20,17 @@
 #include "Alarm.h"
 #include "TempHumid.h"
 
-//#define BUTTON    11        // Pin to read for button click
+#define STOP_BUTTON    12        // Pin for the button used to stop the buzzer
 
 using LCD1602A::LiquidCrystal;
 using LinkedList::Node;
+using Database::Melody;
 
 using namespace UserInterface;
 
 // Initialize hardware classes
 LiquidCrystal lcd(3,4,5,6,7,8,9);
+PassiveBuzzer bzr(11);
 JoyStick ctrl(A0,A1,2);
 
 // Initialize user interface classes
@@ -60,7 +63,7 @@ void newAlarm(Context* alarm) {
 // Converts Alarm object to string for display within the alarmMenu object
 void alarmString(Alarm* alrm, char output[9]) {
     char *temp = new char[9];
-    (alrm -> getTime()) -> toString(temp);
+    (alrm -> getTime()).toString(temp);
 
     output[0] = '>';
     output[1] = ((alrm -> getMelody()) -> name)[0];   // First character of Melody.name
@@ -103,22 +106,12 @@ void setup() {
   LinkedList::insertAfter(alarmHead, addAlarm);
   alarmMenu.setNode(alarmHead);
 
-  //pinMode(BUTTON, INPUT_PULLUP);
+  pinMode(STOP_BUTTON, INPUT_PULLUP);
 }
 
 void loop() {
   uint8_t usr_action = 0;
   int8_t usr_option = 0;  
-
-  /*
-  unsigned long timer = millis() + 250;
-  while (timer > millis()) {
-    if (digitalRead(BUTTON) == LOW) {     // Return to main menu
-      view = &menu;
-      view -> changeContext();
-    }
-  }
-  */
 
   usr_action = ctrl.listen();
   switch (usr_action) {
@@ -161,6 +154,29 @@ void loop() {
       LinkedList::deleteNode(alarmMenu.getNode()); 
       alarmMenu.setNode(alarmHead);
       changeView(&alarmMenu);
+    }
+  }
+
+  if (view -> type() != ALARM) {    // Prevents the alarm from playing when the user is setting it 
+    Node<Menu::Item> *currNode = (alarmHead->getNextLink());        // Skip 'Back' node
+    while (((currNode->getData()).cntx != nullptr)) {               // while Menu::Item != addAlarm
+      Alarm *currAlarm = (currNode->getData()).cntx;                // Cast Context to Alarm object
+      if ((currAlarm->getTime()) == clk.getTime()) {
+        clk.changeContext();                    // Clock becomes visible when the alarm sounds
+        Melody *currMelody = currAlarm -> getMelody();
+
+        // TODO - how can we mitigate the user having to hold the button to stop the alarm
+        while (digitalRead(STOP_BUTTON) != LOW) {                   
+          bzr.playMelody(currMelody->length, currMelody->pitch, 
+                          currMelody->rhythm, currMelody->tempo); 
+          clk.updateDateTime();     // Clock will update but UI will not until alarm is stopped
+        }
+        
+        view -> changeContext();                  // Re-display visible view before alarm sounded
+        break;
+      } else {
+        currNode = currNode -> getNextLink();
+      }
     }
   }
 

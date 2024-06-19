@@ -12,7 +12,7 @@ public:
   void playTone(unsigned int frequency, unsigned int duration);
 
   void playMelody(uint8_t length, unsigned int* pitch, 
-                  uint8_t* rhythm, double tempo);   
+                  unsigned int* rhythm, double tempo);   
 
 private:
   uint8_t _pin;

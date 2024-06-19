@@ -21,6 +21,16 @@ namespace UserInterface
     return result;
   }
 
+  bool Time::operator ==(const Time& right) 
+  {   
+    if ((_hour == right._hour) && (_minute == right._minute)
+        && (_second == right._second)) {
+      return true;
+    }
+
+    return false;
+  }
+
   void Time::toString(char output[9])
   {
     uint8_t length;

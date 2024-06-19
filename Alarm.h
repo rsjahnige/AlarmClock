@@ -25,7 +25,7 @@ namespace UserInterface
   public:
     Alarm(const LiquidCrystal* lcd);
 
-    const Time* getTime() const     { return _time; }
+    const Time getTime() const      { return _time; }
     const Melody* getMelody() const { return _melody; }
 
     void display(void) override;
@@ -41,7 +41,7 @@ namespace UserInterface
     void buttonHold(void) override;
 
   private:
-    Time *_time;
+    Time _time;
     Melody *_melody;
   };
 };

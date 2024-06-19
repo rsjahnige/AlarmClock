@@ -44,7 +44,6 @@ namespace LinkedList
     if (replace != nullptr) replace -> setNextLink(newNode);
   }
 
-  // This function is currently untested !!!!
   template<class T>
   void deleteNode(Node<T>* node) 
   {
