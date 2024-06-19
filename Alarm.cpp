@@ -142,7 +142,7 @@ namespace UserInterface
 
   int8_t Alarm::buttonPress(void) 
   {
-    uint8_t result = -1;
+    int8_t result = -1;
 
     if (Context::getMode() == CNTX_INPUT) {
       if (Context::getCursor() < LCD_LINE2) result = ALRM_SAVE;
