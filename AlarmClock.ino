@@ -60,7 +60,11 @@ void newAlarm(Context* alarm) {
   changeView(alarm);
 }
 
-// Converts Alarm object to string for display within the alarmMenu object
+// Converts Alarm object to string for display of the alarmMenu
+/*
+  Format is as follows: '>S-HH:MM' where S is the first letter of the Sound (melody)
+  name, HH is the hour, and MM is the minute for which the alarm is set
+*/
 void alarmString(Alarm* alrm, char output[9]) {
     char *temp = new char[9];
     (alrm -> getTime()).toString(temp);
@@ -161,6 +165,7 @@ void loop() {
     Node<Menu::Item> *currNode = (alarmHead->getNextLink());        // Skip 'Back' node
     while (((currNode->getData()).cntx != nullptr)) {               // while Menu::Item != addAlarm
       Alarm *currAlarm = (currNode->getData()).cntx;                // Cast Context to Alarm object
+
       if ((currAlarm->getTime()) == clk.getTime()) {
         clk.changeContext();                    // Clock becomes visible when the alarm sounds
         Melody *currMelody = currAlarm -> getMelody();
@@ -169,7 +174,7 @@ void loop() {
         while (digitalRead(STOP_BUTTON) != LOW) {                   
           bzr.playMelody(currMelody->length, currMelody->pitch, 
                           currMelody->rhythm, currMelody->tempo); 
-          clk.updateDateTime();     // Clock will update but UI will not until alarm is stopped
+          clk.updateDateTime();     // Clock will update but LCD will not until alarm is stopped
         }
         
         view -> changeContext();                  // Re-display visible view before alarm sounded
