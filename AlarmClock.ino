@@ -116,6 +116,7 @@ void setup() {
 void loop() {
   uint8_t usr_action = 0;
   int8_t usr_option = 0;  
+  uint8_t mldy_index;
 
   usr_action = ctrl.listen();
   switch (usr_action) {
@@ -170,11 +171,13 @@ void loop() {
         clk.changeContext();                    // Clock becomes visible when the alarm sounds
         Melody *currMelody = currAlarm -> getMelody();
 
-        // TODO - how can we mitigate the user having to hold the button to stop the alarm
+        mldy_index = 0;
         while (digitalRead(STOP_BUTTON) != LOW) {                   
-          bzr.playMelody(currMelody->length, currMelody->pitch, 
-                          currMelody->rhythm, currMelody->tempo); 
+          bzr.playMelody(1, (currMelody->pitch) + mldy_index, 
+                          (currMelody->rhythm) + mldy_index, 
+                          currMelody->tempo); 
           clk.updateDateTime();     // Clock will update but LCD will not until alarm is stopped
+          mldy_index = (mldy_index + 1) % (currMelody->length);
         }
         
         view -> changeContext();                  // Re-display visible view before alarm sounded
