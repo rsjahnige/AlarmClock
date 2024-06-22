@@ -1,3 +1,14 @@
+/*********************************************************************
+>>  File:   Melodies.h
+>>  Author: Ryan Jahnige
+>>
+>>  Description:  Header file that contains note frequency macros, the
+>>                Melody struct definition, and a function to loop 
+>>                each pre-defined Melody.
+>>
+>>  Note: Each time a pre-defined melody is added the getNextMelody()
+>>        function must be updated as well.
+**********************************************************************/
 #ifndef MELODIES_H
 #define MELODIES_H
 

@@ -1,3 +1,15 @@
+/*********************************************************************
+>>  File:   List.h
+>>  Author: Ryan Jahnige
+>>
+>>  Description:  This file contains functions defined for building and
+>>                maintaining a Double Linked List as well as a templated
+>>                Node class to store each element of the list.
+>>
+>>  Note: The developer who chooses to use the LinkedList namespace is
+>>        required to maintain a pointer to at least one Node within the
+>>        linked list, otherwise the list will be lost
+**********************************************************************/
 #ifndef List_H
 #define List_H
 

@@ -1,3 +1,17 @@
+/*********************************************************************
+>>  File:   Menu.h
+>>  Author: Ryan Jahnige
+>>
+>>  Description:  Header file for the Menu class which is derived from
+>>                the Context class. As such, it contains User Interface
+>>                functions that allow a developer to display a 'list'
+>>                on an LCD screen, scroll though the 'list', and select
+>>                items within that 'list' to perform a developer defined
+>>                action.
+>>
+>>  Note: The _curr_node private member variable will always point to the
+>>        node that corresponds to the cursor location on the LCD.
+**********************************************************************/
 #ifndef MENU_H
 #define MENU_H
 

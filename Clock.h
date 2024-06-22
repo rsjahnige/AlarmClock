@@ -1,3 +1,21 @@
+/*********************************************************************
+>>  File: Clock.h
+>>  Author: Ryan Jahnige
+>>
+>>  Description: Header file for the Clock class which is derived from
+>>                the Context class. As such, it contains User Interface
+>>                functions that a developer can use to display and edit
+>>                the time for an LCD screen. The Clock class contains Date
+>>                and Time objects for which the class definitions are 
+>>                defined within this file and can be used externally for 
+>>                other interfaces (e.g., Alarm class).
+>>
+>>  Note: This class also contains backend functionality that increments
+>>        the Date and Time objects using the Arduino system clock; 
+>>        however, this functionality must be called by the developer
+>>        at least every 60 seconds to keep them "up to date" - see 
+>>        Clock::updatedDateTime() for further details.
+**********************************************************************/
 #ifndef CLOCK_H
 #define CLOCK_H
 

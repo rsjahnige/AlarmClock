@@ -1,3 +1,12 @@
+/*********************************************************************
+>>  File: Alarm.h
+>>  Author: Ryan Jahnige
+>>
+>>  Description: Header file for the Alarm class which is derived from
+>>                the Context class. As such, it contains User Interface
+>>                functions that a developer can use to display, edit, 
+>>                and save/delete alarms for an LCD screen.
+**********************************************************************/
 #ifndef ALARM_H
 #define ALARM_H
 

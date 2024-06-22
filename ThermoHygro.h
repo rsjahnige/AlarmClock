@@ -1,3 +1,16 @@
+/*********************************************************************
+>>  File:   ThermoHygro.h
+>>  Author: Ryan Jahnige
+>>
+>>  Description:  Header file which contains class defintions for 
+>>                RealNum and ThermoHygro. ThermoHygro is used to read 
+>>                the temperature and humidy from the surrounding
+>>                environment and store each data point as a RealNum.
+>>
+>>  Note: An additional function itos() is also defined which allows a 
+>>        developer to convert a int8_t to a string - see function
+>>        definition for further details.
+**********************************************************************/
 #ifndef DHT11_H
 #define DHT11_H
 

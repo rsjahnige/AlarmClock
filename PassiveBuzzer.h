@@ -1,3 +1,10 @@
+/*********************************************************************
+>>  File:   PassiveBuzzer.h
+>>  Author: Ryan Jahnige
+>>
+>>  Description:  Header file for the PassiveBuzzer class which is used
+>>                to play individual tones and full melodies.
+**********************************************************************/
 #ifndef PASSIVEBUZZER_H
 #define PASSIVEBUZZER_H
 

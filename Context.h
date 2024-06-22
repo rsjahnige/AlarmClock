@@ -1,3 +1,14 @@
+/*********************************************************************
+>>  File: Context.h
+>>  Author: Ryan Jahnige
+>>
+>>  Description:  Header file for the Context class which serves as the 
+>>                base class for any User Interface which has a component
+>>                that must be displayed to the user via the LCD. In addition
+>>                to displaying the interface, common actions such as shift 
+>>                and clicking a button have been defined so that a user can
+>>                interact with the interface.
+**********************************************************************/
 #ifndef CONTEXT_H
 #define CONTEXT_H
 

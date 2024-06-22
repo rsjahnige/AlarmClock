@@ -1,3 +1,16 @@
+/*********************************************************************
+>>  File:   JoyStick.h
+>>  Author: Ryan Jahnige
+>>
+>>  Description:  Header file for the JoyStick class which is used to 
+>>                listen for user actions from an external joy stick 
+>>                module.
+>>
+>>  Note: To my knowledge, Arduino's do not support parallel computing; 
+>>        therefore, the listen() method use a do-while loop take control 
+>>        of the program for a maximum of 1 second - see JoyStick::listen()
+>>        for further details.
+**********************************************************************/
 #ifndef JOYSTICK_H
 #define JOYSTICK_H
 

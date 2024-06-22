@@ -1,3 +1,12 @@
+/*********************************************************************
+>>  File:   TempHumid.h
+>>  Author: Ryan Jahnige
+>>
+>>  Description:  Header file for the TempHumid class which is derived 
+>>                from the Context class. Uses the DHT11 senor to 
+>>                measure temperature and humidity of the surrounding
+>>                environment which is then displayed to the LCD screen.
+**********************************************************************/
 #ifndef TEMPHUMID_H
 #define TEMPHUMID_H
 
