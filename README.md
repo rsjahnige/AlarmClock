@@ -11,11 +11,11 @@ A schematic diagram is provided within this repository, as a '.bch' file that wa
 ### User Interface
 The user interface for this project consists of two main components: (1) LCD and (2) Joy Stick module; as well as three auxiliary components: (3) Alarm Button, (4) LCD Switch, and (5) LCD Potentiometer.
 A further description of each component is provided below:
-1. LCD - A 2x16 character display that provides a visual interface for each 'Context' defined (e.g., Clock and Temp/Humidity).
-3. Joy Stick Module - Allows the user to interact with the LCD as defined by the currently visible 'Context' methods. An Instruction Manual can be found [here](insert-link).
-4. Alarm Button - Independent button that is used to stop an alarm sound from playing .
-5. LCD Switch - Connected to the LCD backlight, allowing the user to switch the display ON/OFF without affecting the microcontrollers operations.
-6. LCD Potentiometer - Connected to the LCD powersupply, allowing the user to adjust the brightness of the text displayed on the LCD. Please refer to the Troubleshooting section
+1. **LCD** - A 2x16 character display that provides a visual interface for each 'Context' defined (e.g., Clock and Temp/Humidity).
+3. **Joy Stick Module** - Allows the user to interact with the LCD as defined by the currently visible 'Context' methods. Please refer to the [Instruction Manual](insert-link-to-wiki) for a detailed description of the user interface.
+6. **Alarm Button** - Independent button that is used to stop an alarm sound from playing .
+7. **LCD Switch** - Connected to the LCD backlight, allowing the user to switch the display ON/OFF without affecting the microcontrollers operations.
+8. **LCD Potentiometer** - Connected to the LCD powersupply, allowing the user to adjust the brightness of the text displayed on the LCD. Please refer to the Troubleshooting section
    of the Instruction Manual for more details.
 ## Implementation Notes
 ## Disclaimers
