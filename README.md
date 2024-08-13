@@ -5,7 +5,7 @@ Arduino projects; if desired, please refer to the [Implementation Notes](#implem
 ## Directions
 A conventional makefile is not provided, rather a developer can directly pull the contents of this repository then compile and upload it to the microcontroller using the Arduino IDE. Instructions to compile and upload this code to the microcontroller can be found at [Upload a sketch in Arduino IDE](https://support.arduino.cc/hc/en-us/articles/4733418441116-Upload-a-sketch-in-Arduino-IDE). 
 ### Hardware Set-up
-All hardware used for this project was purchased a part of the UNO R3 Super Starter Kit from [Elegoo](https://us.elegoo.com/collections/arduino-kits). A schematic diagram is provided within the [docs/](docs/) folder of this repository, as a '.bch' file that was constructed with [PCB Creator](https://bayareacircuits.com/pcb-design-layout-software-custom/), which can be used to replicate the circuit for this project. **It is important that the pin mappings between the Arduino and each peripheral are set-up exactly as depicted in the schematic. If a user would like to make a change to these mappings, then the AlarmClock.ino file must be updated appropriately.** 
+All hardware used for this project was purchased a part of the UNO R3 Super Starter Kit from [Elegoo](https://us.elegoo.com/collections/arduino-kits). A schematic diagram is provided within the [docs/](docs/) folder of this repository, as a '.bch' file, that was constructed with [PCB Creator](https://bayareacircuits.com/pcb-design-layout-software-custom/), which can be used to replicate the circuit for this project. **It is important that the pin mappings between the Arduino and each peripheral are set-up exactly as depicted in the schematic. If a user would like to make a change to these mappings, then the AlarmClock.ino file must be updated accordingly.** 
 ### User Interface
 The user interface for this project consists of two main components: (1) LCD and (2) Joy Stick module; as well as three auxiliary components: (3) Alarm Button, (4) LCD Switch, and (5) LCD Potentiometer.
 A further description of each component is provided below:
@@ -17,7 +17,7 @@ A further description of each component is provided below:
 ## Implementation Notes
 The design for this project follows the file hierarchy depicted below:  
 
-Note that each class derived from the Context class defines an independent aspect of the user interface (e.g., TempHumid displays values on the LCD read from the DHT11 sensor). Whereas the **AlarmClock.ino** file defines how the different Contexts and components interact with one another. If one so desires, I think it would be a fun project to define your own User Interface for an Alarm Clock by rewwritting the AlarmClock.ino file using the resources availible in this repository. 
+Note that each class derived from the Context class defines an independent aspect of the user interface (e.g., TempHumid displays values on the LCD read from the DHT11 sensor). Whereas the **AlarmClock.ino** file defines how the different Contexts and components interact with one another. If one so desires, I think it would be a fun project to define your own User Interface for an Alarm Clock by rewwritting the AlarmClock.ino file, using the resources availible in this repository. 
 ### Hardware Classes
 
 ### UserInterface Namespace
@@ -26,4 +26,4 @@ The UserInterface namespace contains all classes that are used to link the main 
 There are two external dependencies required which include: (1) Arduino.h and (2) inttypes.h. The Arduino header file is needed to communicate with the pins of the microcontroller as well as for clock synchronization. The inttypes header file is part of the C standard library which is needed for the (u)int8_t data types in files that are not dependent on the underlying microcontroller architecture (e.g., Melodies.h). It is important to note that the (u)int8_t data types are included in the Arduino header file; therefore, any file that includes Arduino.h does not require inttypes.h.
 ## Disclaimers
 1. **This code is _NOT_ well tested -** a majoriy of testing was performed by simply playing with the user interface
-2. **I have _NO_ background in circuit design -** use at your own risk
+2. **I have _NO_ background in circuit design; use at your own risk**
