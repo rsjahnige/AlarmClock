@@ -3,7 +3,7 @@ As a whole, the code contained within this repository provides an Alarm Clock im
 displays text on a Liquid Crystal Display (LCD) linked to a Joy Stick module. This code has been written with the intention that much of it can be reused for other
 Arduino projects; if desired, please refer to the [Implementation Notes](#implementation-notes) and [Disclaimers](#disclaimers) sections of this document before proceeding. 
 ## Directions
-A conventional makefile is not provided, rather a developer can directly pull the contents of this repository then compile and upload it to the microcontroller using the Arduino IDE. Instructions to compile and upload this code to the microcontroller can be found at [Upload a sketch in Arduino IDE](https://support.arduino.cc/hc/en-us/articles/4733418441116-Upload-a-sketch-in-Arduino-IDE). 
+A conventional makefile is not provided; rather, a developer can directly pull the contents of this repository, then compile and upload it to the microcontroller using the Arduino IDE. Instructions to compile and upload this code to the microcontroller can be found at [Upload a sketch in Arduino IDE](https://support.arduino.cc/hc/en-us/articles/4733418441116-Upload-a-sketch-in-Arduino-IDE). 
 ### Hardware Set-up
 All hardware used for this project was purchased a part of the UNO R3 Super Starter Kit from [Elegoo](https://us.elegoo.com/collections/arduino-kits). A schematic diagram is provided within the [docs/](docs/) folder of this repository, as a '.bch' file, that was constructed with [PCB Creator](https://bayareacircuits.com/pcb-design-layout-software-custom/), which can be used to replicate the circuit for this project. **It is important that the pin mappings between the Arduino and each peripheral are set-up exactly as depicted in the schematic. If a user would like to make a change to these mappings, then the AlarmClock.ino file must be updated accordingly.** 
 ### User Interface
@@ -19,7 +19,7 @@ The design for this project follows the file hierarchy depicted below:
 
 Note that each class derived from the Context class defines an independent aspect of the user interface (e.g., TempHumid displays values on the LCD read from the DHT11 sensor). Whereas the **AlarmClock.ino** file defines how the different Contexts and components interact with one another. If one so desires, I think it would be a fun project to define your own User Interface for an Alarm Clock by rewwritting the AlarmClock.ino file, using the resources availible in this repository. 
 ### Hardware Classes
-
+The hardware clases (e.g., LiquidCrystal.h/cpp, JoyStick.h/cpp, ...) have been written in such a way as to be soley dependent upon the underlying Arduino architecture, and independent of any overlaying functionality provided by the Alarm Clock implementation.
 ### UserInterface Namespace
 The UserInterface namespace contains all classes that are used to link the main components of the user interface (i.e., LCD and Joy Stick module) by defining methods for each Joy Stick action (e.g., left/right/up/down/click). Each class contained within this namespace is a decendent of the Context class which is responsible for printing characters to the LCD as well as defining default methods for Joy Stick actions that will be called if not otherwise overridden. 
 ### Dependencies
