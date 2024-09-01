@@ -1,11 +1,11 @@
 # Arduino Alarm Clock
 As a whole, the code contained within this repository provides an Alarm Clock implementation for an Arduino microcontroller, complete with a user interface that
 displays text on a Liquid Crystal Display (LCD) linked to a Joy Stick module. This code has been written with the intention that much of it can be reused for other
-Arduino projects; if desired, please refer to the [Implementation Notes](#implementation-notes) and [Disclaimers](#disclaimers) sections of this document before proceeding. 
+Arduino projects. If desired, please refer to the [Implementation Notes](#implementation-notes) and [Disclaimers](#disclaimers) sections of this document before proceeding. 
 ## Directions
 A conventional makefile is not provided; rather, a developer can directly pull the contents of this repository, then compile and upload it to the microcontroller using the Arduino IDE. Instructions to compile and upload this code to the microcontroller can be found at [Upload a sketch in Arduino IDE](https://support.arduino.cc/hc/en-us/articles/4733418441116-Upload-a-sketch-in-Arduino-IDE). 
 ### Hardware Set-up
-All hardware used for this project was purchased a part of the UNO R3 Super Starter Kit from [Elegoo](https://us.elegoo.com/collections/arduino-kits). A schematic diagram is provided within the [docs/](docs/) folder of this repository, as a '.bch' file, that was constructed with [PCB Creator](https://bayareacircuits.com/pcb-design-layout-software-custom/), which can be used to replicate the circuit for this project. **It is important that the pin mappings between the Arduino and each peripheral are set-up exactly as depicted in the schematic. If a user would like to make a change to these mappings, then the AlarmClock.ino file must be updated accordingly.** 
+All hardware used for this project was purchased as part of the UNO R3 Super Starter Kit from [Elegoo](https://us.elegoo.com/collections/arduino-kits). A schematic diagram is provided within the [docs/](docs/) folder of this repository, as a '.bch' file, that was constructed with [PCB Creator](https://bayareacircuits.com/pcb-design-layout-software-custom/), which can be used to replicate the circuit for this project. **It is important that the pin mappings between the Arduino and each peripheral are set-up exactly as depicted in the schematic. If a user would like to make a change to these mappings, then the AlarmClock.ino file must be updated accordingly.** 
 ### User Interface
 The user interface for this project consists of two main components: (1) LCD and (2) Joy Stick module; as well as three auxiliary components: (3) Alarm Button, (4) LCD Switch, and (5) LCD Potentiometer.
 A further description of each component is provided below:
