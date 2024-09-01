@@ -17,7 +17,7 @@ A further description of each component is provided below:
 ## Implementation Notes
 The design for this project follows the file hierarchy depicted below:  
 
-Note that each class derived from the Context class defines an independent aspect of the user interface (e.g., TempHumid displays values on the LCD read from the DHT11 sensor). Whereas the **AlarmClock.ino** file defines how the different Contexts and components interact with one another. If one so desires, I think it would be a fun project to define your own User Interface for an Alarm Clock by rewwritting the AlarmClock.ino file, using the resources availible in this repository. 
+Note that each class derived from the Context class defines an independent aspect of the user interface (e.g., TempHumid displays values on the LCD read from the DHT11 sensor). Whereas the **AlarmClock.ino** file defines how the different Contexts and components interact with one another. If one so desires, I think it would be a fun project to define your own User Interface for an Alarm Clock by rewritting the AlarmClock.ino file, using the resources availible in this repository. 
 ### Hardware Classes
 The hardware clases (e.g., LiquidCrystal.h/cpp, JoyStick.h/cpp, ...) have been written in such a way as to be soley dependent upon the underlying Arduino architecture, and independent of any overlaying functionality provided by the Alarm Clock implementation.
 ### UserInterface Namespace
