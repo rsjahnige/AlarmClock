@@ -24,4 +24,4 @@ The UserInterface namespace contains all classes that are used to link the main 
 There are two external dependencies required which include: (1) Arduino.h and (2) inttypes.h. The Arduino header file is needed to communicate with the pins of the microcontroller as well as for clock synchronization. The inttypes header file is part of the C standard library which is needed for the (u)int8_t data types in files that are not dependent on the underlying microcontroller architecture (e.g., Melodies.h). It is important to note that the (u)int8_t data types are included in the Arduino header file; therefore, any file that includes Arduino.h does not require inttypes.h.
 ## Disclaimers
 1. **This code is _NOT_ well tested -** a majoriy of testing was performed by simply playing with the user interface
-2. **I have _NO_ background in circuit design; use at your own risk**
+2. **I have _NO_ background in circuit design - use at your own risk**
